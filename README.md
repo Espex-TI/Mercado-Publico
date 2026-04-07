@@ -60,7 +60,7 @@ Responsabilidades principales:
 
 ### Sitio publicado
 
-- URL publica: https://espex-ti.github.io/Mercado-Publico/
+- URL publica: https://espex-ti.github.io/Mercado-Publico/dashboard-Licitaciones.html
 
 ### Fuentes CSV publicadas
 
@@ -185,14 +185,8 @@ Mercado-Publico/
 |- docs/                 # (opcional) manuales tecnicos y funcionales
 ```
 
-## Roadmap recomendado
 
-- Versionar cambios de esquema de datos (migraciones de columnas).
-- Agregar tablero de salud operacional (estado de triggers y ultima corrida).
-- Integrar alertas por fallo critico en trigger.
-- Incorporar pruebas de regresion para filtros y reglas de negocio.
 
----
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&height=120&text=ESPEX%20%7C%20Mercado%20Publico&fontAlign=50&fontAlignY=40&color=0:2747c7,100:07a0c3&fontColor=ffffff" alt="Footer banner"/>
