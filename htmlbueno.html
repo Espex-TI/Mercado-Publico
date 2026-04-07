@@ -1,0 +1,2814 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Licitaciones Mercado Publico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- Bootstrap + DataTables (estilos) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --bg-soft: #eef1f8;
+      --panel: #ffffff;
+      --ink: #1f2a3d;
+      --muted: #6c7892;
+      --line: #e4e9f2;
+
+      --navy: #2747c7;
+      --navy-2: #3f5ad6;
+      --violet: #7f56d9;
+      --cyan: #07a0c3;
+
+      --ok: #1f9d5c;
+      --warn: #de8a00;
+      --danger: #d94242;
+      --slate: #7b879c;
+
+      --chip: #eff3ff;
+      --shadow: 0 14px 30px #22335a12;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: radial-gradient(circle at 0% 0%, #ffffff 0%, #f6f7fb 28%), var(--bg);
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1200px, 96vw);
+      margin: 14px auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      box-shadow: var(--shadow);
+      margin-bottom: 8px !important;
+      justify-items: center;
+    }
+
+    .side {
+      background: linear-gradient(165deg, #223268, #2f4691 60%, #324db0);
+      border-radius: 22px;
+      color: #fff;
+      padding: 14px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      position: sticky;
+      top: 12px;
+      height: max-content;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 6px;
+      border-radius: 12px;
+      background: #ffffff17;
+    }
+
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(130deg, #8ea8ff, #d6dfff);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-mark:before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #2d47bf;
+      right: -4px;
+      top: -4px;
+    }
+
+    .logo b { font-family: "Outfit", sans-serif; letter-spacing: .25px; }
+    .logo span { font-size: .75rem; opacity: .86; display: block; margin-top: 2px; }
+
+    .nav-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .nav-item {
+      border-radius: 11px;
+      padding: 9px 10px;
+      font-size: .84rem;
+      font-weight: 600;
+      color: #dce6ff;
+      background: transparent;
+      border: 1px solid transparent;
+    }
+
+    .nav-item.active {
+      background: #ffffff1c;
+      border-color: #ffffff35;
+      color: #fff;
+    }
+
+    .small-card {
+      border-radius: 12px;
+      padding: 10px;
+      background: #ffffff17;
+      border: 1px solid #ffffff2d;
+      display: grid;
+      gap: 4px;
+      font-size: .8rem;
+    }
+
+    .small-card b { font-size: 1.05rem; }
+
+    .main {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .top {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 12px;
+    }
+
+    .top-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-family: "Outfit", sans-serif;
+      font-size: clamp(1.2rem, 2.1vw, 1.7rem);
+      letter-spacing: .2px;
+    }
+
+    .title p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid #dce4f4;
+      background: var(--chip);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: .74rem;
+      color: #38507f;
+      font-weight: 700;
+    }
+
+    .theme-toggle {
+      min-width: 128px;
+    }
+
+    .side-head {
+      position: relative;
+    }
+
+    .sidebar-toggle,
+    .sidebar-close-btn {
+      width: auto;
+      min-width: 40px;
+      height: 40px;
+      padding: 0.35rem 0.55rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      flex: 0 0 auto;
+    }
+
+    .sidebar-toggle {
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: #fff;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 1200;
+      box-shadow: var(--shadow);
+      transition: none;
+      opacity: 1;
+      pointer-events: auto;
+      display: inline-flex !important;
+      visibility: visible !important;
+    }
+
+    .sidebar-toggle:hover,
+    .sidebar-toggle:focus,
+    .sidebar-toggle:active {
+      background: #fff;
+      color: var(--ink);
+      border-color: var(--line);
+      opacity: 1;
+    }
+
+    .sidebar-close-btn {
+      display: none;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+    }
+
+    .view-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .view-actions .btn {
+      min-height: 38px;
+      padding: 0.45rem 0.7rem;
+      font-size: .8rem;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    .quick-actions .btn {
+      min-height: 36px;
+      font-size: .78rem;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    .results-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: linear-gradient(145deg, #fff, #f9fbff);
+      padding: 8px 10px;
+    }
+
+    .bottom-controls {
+      margin-top: 10px;
+    }
+
+    .pager-size {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .pager-size .form-select {
+      width: 92px;
+      min-width: 92px;
+      padding-top: .3rem;
+      padding-bottom: .3rem;
+    }
+
+    .pager-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pager-controls .btn {
+      width: auto;
+      min-width: 34px;
+      height: 34px;
+      padding: 0.2rem 0.45rem;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: 1.15fr repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: linear-gradient(145deg, #fff, #fbfcff);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      aspect-ratio: 1 / 1;
+      min-width: 0;
+      min-height: 92px;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: visible;
+      font-size: .95rem;
+    }
+
+    .kpi:nth-child(-n+2), .kpi:nth-child(n+3) {
+      grid-column: span 1;
+    }
+
+    .kpi span { color: var(--muted); font-size: .7rem; font-weight: 700; white-space: normal; text-align: center; line-height: 1.15; }
+    .kpi b { font-size: 1rem; max-width: 100%; white-space: normal; word-break: break-word; text-align: center; line-height: 1.05; }
+    .kpi-money { min-height: 112px; grid-row: span 2; grid-column: 1; }
+    .kpi-money b { font-size: clamp(1.35rem, 3vw, 2.1rem); letter-spacing: -0.02em; }
+    .kpi-mini { min-height: 80px; aspect-ratio: auto; }
+
+    .sort-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sort-label {
+      margin: 0;
+      font-size: .75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .sort-row .form-select {
+      width: min(320px, 95vw);
+    }
+
+    @media (max-width: 900px) {
+      .kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .kpi-money {
+        grid-column: span 2;
+        grid-row: auto;
+      }
+    }
+    @media (max-width: 600px) {
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+      .kpi {
+        aspect-ratio: unset;
+        min-height: 80px;
+      }
+      .kpi-money {
+        grid-column: auto;
+        grid-row: auto;
+      }
+      .view-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .sort-row .form-select {
+        width: 100%;
+      }
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)) auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .field { display: grid; gap: 4px; }
+    .field label { font-size: .72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+    .date-range-inputs { display: grid; gap: 6px; grid-template-columns: 1fr; }
+
+
+    input, select, button, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 700;
+      background: linear-gradient(120deg, var(--navy), var(--violet));
+    }
+
+    .btn-lite {
+      width: auto;
+      border: 1px solid #d8e2f1;
+      background: #f5f8ff;
+      color: #37517d;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .switch {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .switch-left,
+    .switch-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .switch .btn-lite.active {
+      background: linear-gradient(120deg, var(--navy), var(--violet));
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 10px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 10px;
+      align-items: start;
+      align-content: start;
+    }
+    .card {
+      min-width: 0;
+      max-width: 100%;
+      font-size: 0.92rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: linear-gradient(145deg, #fff, #fbfcff);
+      padding: 8px 10px;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+      box-sizing: border-box;
+      overflow: hidden;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 22px #22335a10; }
+
+    .card .desc {
+      /* Fallback for non-webkit browsers: limit height by lines */
+      line-height: 1.45;
+      max-height: calc(1.45em * 4);
+      overflow: hidden;
+      display: block; /* fallback */
+      white-space: normal;
+
+      /* Better truncation in WebKit/Blink using line-clamp */
+      display: -webkit-box;
+      line-clamp: 4;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+    }
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        min-height: 120px;
+      }
+    }
+    /* Mejorar el contenido interno para que no se desborde */
+    /* (card .desc consolidated above with fallback + webkit clamp) */
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .head-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 8px;
+    }
+
+    .code {
+      font-family: monospace;
+      font-size: .73rem;
+      background: #f1f5ff;
+      border-radius: 8px;
+      color: #3a5494;
+      padding: 4px 6px;
+      max-width: 66%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .flags { display: flex; gap: 5px; flex-wrap: wrap; justify-content: end; }
+
+    .flag {
+      border-radius: 999px;
+      padding: 4px 7px;
+      font-size: .67rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .f-new { background: var(--navy); }
+    .f-v { background: var(--ok); }
+    .f-nv { background: var(--slate); }
+    .f-u { background: var(--danger); }
+
+    .name {
+      margin: 0;
+      font-size: .94rem;
+      line-height: 1.33;
+    }
+
+    .desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.45;
+      max-height: 5.2em;
+      overflow: hidden;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 7px;
+      font-size: .79rem;
+    }
+
+    .kv b { color: #425782; }
+
+    .foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .money { font-weight: 800; color: #263b66; }
+
+    .status {
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: .67rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .st-nt { background: #7e8da4; }
+    .st-ep { background: var(--warn); }
+    .st-tr { background: var(--ok); }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .link-btn {
+      border: none;
+      width: auto;
+      background: transparent;
+      color: #2e56ad;
+      font-weight: 800;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .list,
+    .kanban {
+      display: none;
+    }
+
+    .list {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .list-head,
+    .list-row {
+      display: grid;
+      grid-template-columns: 1.2fr .68fr .62fr .55fr .58fr auto;
+      gap: 7px;
+      align-items: center;
+      padding: 9px;
+    }
+
+    .list-head {
+      background: #f3f6ff;
+      border-bottom: 1px solid var(--line);
+      font-size: .75rem;
+      color: #3a527f;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .list-row {
+      border-bottom: 1px solid #edf1f9;
+      font-size: .82rem;
+    }
+
+    .list-row:last-child { border-bottom: none; }
+
+    .name-cell { display: grid; gap: 2px; min-width: 0; }
+    .name-cell strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .name-cell span { font-size: .74rem; color: var(--muted); }
+
+    .kanban {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      align-items: start;
+      align-content: start;
+    }
+
+    .lane {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfcff;
+      padding: 7px;
+      display: grid;
+      gap: 6px;
+      min-height: 70px;
+      align-items: start;
+      align-content: start;
+    }
+
+    .lane-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #d8deeb;
+      font-size: .8rem;
+      color: #3b5687;
+      font-weight: 800;
+    }
+
+    .count {
+      border: 1px solid #d8e1f0;
+      border-radius: 999px;
+      background: #eff3ff;
+      padding: 2px 7px;
+      font-size: .72rem;
+      font-family: monospace;
+    }
+
+    .mini {
+      border: 1px solid #dde4f0;
+      border-radius: 10px;
+      background: #fff;
+      padding: 6px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .mini h4 {
+      margin: 0;
+      font-size: .75rem;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .mini-id {
+      font-family: monospace;
+      font-size: .66rem;
+      color: #3f5784;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .73rem;
+      color: #51698f;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 14px;
+      z-index: 9999 !important;
+      background: #111a2c73;
+    }
+
+    .modal.open { display: flex; }
+
+    .modal-card {
+      margin-top: 24px;
+      width: min(900px, 98vw);
+      max-height: 92vh;
+      overflow: auto;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 8px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.35;
+    }
+
+    .close {
+      width: auto;
+      border: 1px solid #d8e1f0;
+      background: #f3f6ff;
+      color: #3b5687;
+      font-weight: 700;
+      padding: 7px 10px;
+      cursor: pointer;
+    }
+
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .box {
+      border: 1px solid #dde5f1;
+      border-radius: 10px;
+      background: #fbfdff;
+      padding: 8px;
+      display: grid;
+      gap: 4px;
+      font-size: .83rem;
+    }
+
+    .box b { font-size: .75rem; color: #415b8a; }
+
+    .full {
+      border: 1px solid #dde5f1;
+      border-radius: 10px;
+      background: #fbfdff;
+      padding: 10px;
+      white-space: pre-wrap;
+      line-height: 1.4;
+      color: #526a8f;
+      font-size: .88rem;
+    }
+
+    .edit {
+      border: 1px solid #dde5f1;
+      border-radius: 10px;
+      background: #fcfdff;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .edit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .save {
+      display: flex;
+      justify-content: end;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .toast {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      background: #2d4cbfcc;
+      color: #fff;
+      border: 1px solid #5570cb;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: .82rem;
+      display: none;
+      z-index: 60;
+    }
+
+    .toast.show { display: block; }
+
+    body[data-theme="dark"], body[data-bs-theme="dark"] {
+      --bg: #0f1421;
+      --bg-soft: #171f33;
+      --panel: #131b2d;
+      --ink: #e8eeff;
+      --muted: #9dadcc;
+      --line: #24304a;
+      --chip: #1a2440;
+      --shadow: 0 14px 30px #0000004d;
+    }
+
+    body[data-theme="dark"], body[data-bs-theme="dark"] {
+      background: radial-gradient(circle at 0% 0%, #1a2440 0%, #10172a 26%), var(--bg);
+    }
+
+    body[data-theme="dark"] .side {
+      background: linear-gradient(165deg, #151f40, #1c2a59 60%, #1f2d6e);
+    }
+
+    body[data-theme="dark"] .sidebar-toggle {
+      background: #0f172a;
+      color: #e8eeff;
+      border-color: #2a3a5e;
+    }
+
+    body[data-theme="dark"] .sidebar-toggle:hover,
+    body[data-theme="dark"] .sidebar-toggle:focus,
+    body[data-theme="dark"] .sidebar-toggle:active {
+      background: #0f172a;
+      color: #e8eeff;
+      border-color: #2a3a5e;
+    }
+
+    .sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 14, 27, 0.52);
+      backdrop-filter: blur(2px);
+      z-index: 1040;
+    }
+
+    .scroll-nav {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      display: grid;
+      gap: 8px;
+      z-index: 1070;
+    }
+
+    .scroll-nav .btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      box-shadow: var(--shadow);
+    }
+
+    body[data-theme="dark"] .nav-item {
+      color: #c8d6ff;
+    }
+
+    body[data-theme="dark"] .nav-item.active {
+      background: #ffffff24;
+      border-color: #ffffff4a;
+    }
+
+    body[data-theme="dark"] .chip {
+      border-color: #2b3a5a;
+      color: #b5c6ef;
+    }
+
+    body[data-theme="dark"] .kpi,
+    body[data-theme="dark"], body[data-bs-theme="dark"] .card,
+    body[data-theme="dark"] .lane,
+    body[data-theme="dark"] .mini,
+    body[data-theme="dark"] .modal-card,
+    body[data-theme="dark"] .box,
+    body[data-theme="dark"] .full,
+    body[data-theme="dark"] .edit {
+      background: #162139;
+      border-color: #273655;
+    }
+
+    body[data-theme="dark"] .btn-lite {
+      border-color: #314266;
+      background: #1a2744;
+      color: #bdd0ff;
+    }
+
+    body[data-theme="dark"] .results-toolbar {
+      background: #162139;
+      border-color: #273655;
+    }
+
+    body[data-theme="dark"] .top,
+    body[data-theme="dark"] .section {
+      background: #131b2d;
+      border-color: #24304a;
+    }
+
+    body[data-theme="dark"] .pager-size,
+    body[data-theme="dark"] .sort-label {
+      color: #b5c6ef;
+    }
+
+    body[data-theme="dark"] .btn-outline-primary,
+    body[data-theme="dark"] .btn-outline-secondary {
+      color: #d5e0ff;
+      border-color: #3a4f79;
+      background: #18233c;
+    }
+
+    body[data-theme="dark"] .switch .btn-lite.active {
+      background: linear-gradient(120deg, #3656d8, #8562da);
+      color: #fff;
+    }
+
+    body[data-theme="dark"] input,
+    body[data-theme="dark"] select,
+    body[data-theme="dark"] textarea {
+      background: #121d33;
+      color: #e6ecff;
+      border-color: #2a3a5e;
+    }
+
+    body[data-theme="dark"] .list-head {
+      background: #1a2744;
+      color: #b9c9ec;
+    }
+
+    body[data-theme="dark"] .list-row {
+      border-bottom-color: #223252;
+    }
+
+    body[data-theme="dark"] .code {
+      background: #1b294a;
+      color: #b9c8ee;
+    }
+
+    body[data-theme="dark"] .kv b,
+    body[data-theme="dark"] .money,
+    body[data-theme="dark"] .lane-head,
+    body[data-theme="dark"] .box b,
+    body[data-theme="dark"] .link-btn {
+      color: #b9c8ee;
+    }
+
+    body[data-theme="dark"] .count {
+      border-color: #33476f;
+      background: #1d2c4a;
+      color: #d6e1ff;
+    }
+
+    body[data-theme="dark"] .modal {
+      background: #050a14bf;
+    }
+
+    body[data-theme="dark"] .close {
+      border-color: #304466;
+      background: #1a2742;
+      color: #d0dcf8;
+    }
+
+    body[data-theme="dark"] .toast {
+      background: #233d94e0;
+      border-color: #4664c6;
+    }
+
+    body[data-theme="dark"] .sidebar-backdrop {
+      background: rgba(3, 6, 16, 0.68);
+    }
+
+    @media (max-width: 1150px) {
+      .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .toolbar { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar-close-btn { display: inline-flex; }
+      .dashboard-shell > aside {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        width: min(360px, calc(100vw - 24px));
+        max-width: min(360px, calc(100vw - 24px));
+        height: calc(100vh - 24px);
+        transform: translateX(-110%);
+        opacity: 1;
+        z-index: 1050;
+      }
+      .dashboard-shell > section {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+      }
+      body.sidebar-open {
+        overflow: hidden;
+      }
+      body.sidebar-open .dashboard-shell > aside {
+        transform: translateX(0);
+        pointer-events: auto;
+      }
+      body.sidebar-collapsed .dashboard-shell > aside {
+        display: block;
+      }
+    }
+
+    body.sidebar-collapsed .dashboard-shell > aside {
+      flex: 0 0 0 !important;
+      max-width: 0 !important;
+      opacity: 0;
+      transform: translateX(-12px);
+      pointer-events: none;
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+    }
+
+    body.sidebar-collapsed .dashboard-shell > section {
+      flex: 0 0 100% !important;
+      max-width: 100% !important;
+    }
+
+    body.sidebar-collapsed .cards {
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+    }
+
+    @media (max-width: 820px) {
+      .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cards { grid-template-columns: 1fr; }
+      .kanban { grid-template-columns: 1fr; }
+      .list-head, .list-row { grid-template-columns: 1fr; }
+      .grid3, .edit-grid { grid-template-columns: 1fr; }
+      .toolbar { grid-template-columns: 1fr; }
+      .switch { flex-direction: column; align-items: stretch; gap: 10px; }
+      .switch-left, .switch-right { width: 100%; justify-content: space-between; }
+      .chips { justify-content: flex-start; gap: 6px; }
+      .view-actions,
+      .quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .results-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .pager-controls {
+        justify-content: space-between;
+      }
+    }
+
+    /* DataTable palette: use existing CSS variables for consistent look */
+    #dtTable {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    #dtTable thead th {
+      background: linear-gradient(120deg, var(--navy), var(--navy-2));
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-weight: 700;
+      vertical-align: middle;
+    }
+    #dtTable tbody tr { border-bottom: 1px solid var(--line); }
+    #dtTable tbody td { vertical-align: middle; color: var(--ink); }
+    .table-striped tbody tr:nth-of-type(odd) { background: var(--bg-soft); }
+    .table-striped tbody tr:hover { background: #f3f6ff; }
+
+    /* Dark theme overrides */
+    body[data-theme="dark"] #dtTable {
+      background: #0f1724;
+      color: var(--ink);
+      border-color: #24304a;
+    }
+    body[data-theme="dark"] #dtTable thead th {
+      background: linear-gradient(120deg, #223268, #1c2a59);
+      color: #e8eefc;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    body[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) { background: #0b1526; }
+    body[data-theme="dark"] .table-striped tbody tr:hover { background: #122033; }
+  </style>
+</head>
+<body>
+
+  <button id="sidebarToggle" class="btn btn-light btn-sm sidebar-toggle" type="button" aria-label="Abrir menÃº lateral"><i class="bi bi-list"></i></button>
+
+  <main class="container-fluid py-3">
+    <div class="row g-4 dashboard-shell">
+      <!-- Sidebar -->
+      <aside class="col-12 col-lg-3">
+          <div class="side h-100 d-flex flex-column justify-content-between sticky-top" style="top:12px;">
+            <div>
+              <div class="side-head mb-2 d-flex align-items-center justify-content-between gap-2">
+                <div class="logo d-flex align-items-center gap-2">
+                  <span class="logo-mark"></span>
+                  <div>
+                    <b>ESPEX</b>
+                    <span>Panel de licitaciones</span>
+                  </div>
+                </div>
+                <button id="sidebarClose" class="btn btn-sm btn-light sidebar-close-btn" type="button" aria-label="Cerrar menÃº"><i class="bi bi-x-lg"></i></button>
+              </div>
+              <button id="themeToggle" class="btn btn-sm btn-outline-light w-100 mb-3"><i class="bi bi-moon-stars"></i> Modo Oscuro</button>
+              <form id="sidebar-filtros" class="mb-4">
+                <div class="field mb-2">
+                  <label for="q">Buscar</label>
+                  <div class="input-group">
+                    <input id="q" type="text" class="form-control" placeholder="Buscar..." />
+                    <button class="btn btn-outline-secondary" id="reset" title="Limpiar filtros" type="button"><i class="bi bi-x-lg me-1"></i>Limpiar filtros</button>
+                  </div>
+                </div>
+                <div class="field mb-2">
+                  <label for="cat">CategorÃ­a</label>
+                  <select id="cat" class="form-select"></select>
+                </div>
+                <div class="field mb-2">
+                  <label for="org">Organismo</label>
+                  <select id="org" class="form-select"></select>
+                </div>
+                <div class="field mb-2">
+                  <label for="estado">Estado</label>
+                  <select id="estado" class="form-select"></select>
+                </div>
+                <div class="field mb-2">
+                  <label for="visto">Visto</label>
+                  <select id="visto" class="form-select"></select>
+                </div>
+                <div class="field mb-2">
+                  <label for="gestion">GestiÃ³n</label>
+                  <select id="gestion" class="form-select">
+                    <option value="">Todas</option>
+                    <option value="Sin Evaluar">Sin Evaluar</option>
+                    <option value="Descartada">Descartada</option>
+                    <option value="En Proceso">En Proceso</option>
+                    <option value="Aplicada">Aplicada</option>
+                  </select>
+                </div>
+                <div class="field mb-2">
+                  <label for="catGeneral">Clasificacion</label>
+                  <select id="catGeneral" class="form-select"></select>
+                </div>
+                <div class="field mb-2">
+                  <label for="producto">Producto</label>
+                  <select id="producto" class="form-select"></select>
+                </div>
+                <div class="field mb-2 date-range">
+                  <label>Fechas</label>
+                  <div class="date-range-inputs">
+                    <input id="fechaDesde" type="date" class="form-control" />
+                    <input id="fechaHasta" type="date" class="form-control" />
+                  </div>
+                </div>
+              </form>
+              <div class="small-card mb-4">
+                <b><i class="bi bi-info-circle me-1"></i>Ayuda</b>
+                <span>Utiliza los filtros y vistas para explorar los datos.</span>
+              </div>
+            </div>
+          </div>
+      </aside>
+
+      <!-- Main Content -->
+      <section class="col-lg-9">
+          <div class="top card shadow-sm p-4 mb-4">
+          <div class="top-head d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+            <div class="title d-flex align-items-start gap-2">
+              <div>
+                <h1 class="mb-1">Dashboard Licitaciones Mercado Publico</h1>
+                <p class="mb-0">Panel de control de licitaciones y KPIs</p>
+              </div>
+            </div>
+            <div class="chips d-flex flex-wrap gap-2 justify-content-end">
+              <span class="chip"><i class="bi bi-lightning-charge text-warning me-1"></i>RÃ¡pido</span>
+              <span class="chip"><i class="bi bi-shield-check text-success me-1"></i>Seguro</span>
+              <span class="chip"><i class="bi bi-cloud-arrow-down text-primary me-1"></i>Actualizable</span>
+            </div>
+          </div>
+          <div class="mb-2 d-flex flex-wrap gap-2 align-items-center">
+            <span id="mTotal" class="chip">Total: 0</span>
+            <span id="mShow" class="chip">Mostrando: 0</span>
+            <span id="mUpd" class="chip">Actualizado: cargando datos...</span>
+          </div>
+          <div class="kpis mb-3">
+            <div class="kpi kpi-money">
+              <span>Monto Total</span>
+              <b id="kMonto">$0</b>
+            </div>
+            <div class="kpi kpi-mini">
+              <span>Nuevas</span>
+              <b id="kNew">0</b>
+            </div>
+            <div class="kpi kpi-mini">
+              <span>En Proceso</span>
+              <b id="kProc">0</b>
+            </div>
+            <div class="kpi kpi-mini">
+              <span>Aplicadas</span>
+              <b id="kApl">0</b>
+            </div>
+            <div class="kpi kpi-mini">
+              <span>Descartadas</span>
+              <b id="kDesc">0</b>
+            </div>
+          </div>
+          <div class="view-actions mb-2">
+            <button id="viewCards" class="btn btn-outline-primary btn-sm"><i class="bi bi-grid-3x3-gap me-1"></i>Tarjetas</button>
+            <button id="viewList" class="btn btn-outline-primary btn-sm"><i class="bi bi-list-ul me-1"></i>Lista</button>
+            <button id="viewBoard" class="btn btn-outline-primary btn-sm"><i class="bi bi-kanban me-1"></i>Kanban</button>
+            <button id="exportarExcel" class="btn btn-success btn-sm"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar Excel</button>
+          </div>
+          <div class="sort-row mb-2">
+            <label for="ordenarPor" class="sort-label">Ordenar</label>
+            <select id="ordenarPor" class="form-select form-select-sm">
+              <option value="">Predeterminado</option>
+              <option value="dias">DÃ­as (menor a mayor)</option>
+              <option value="dias_desc">DÃ­as (mayor a menor)</option>
+              <option value="monto">Monto (mayor a menor)</option>
+              <option value="monto_asc">Monto (menor a mayor)</option>
+              <option value="nombre">Nombre (A-Z)</option>
+              <option value="nombre_desc">Nombre (Z-A)</option>
+            </select>
+          </div>
+          <div class="quick-actions mb-1">
+            <button id="quickUrg" class="btn btn-warning btn-sm" type="button"><i class="bi bi-exclamation-triangle me-1"></i>Urgentes</button>
+            <button id="quickNew" class="btn btn-primary btn-sm" type="button"><i class="bi bi-plus-circle me-1"></i>Nuevas</button>
+            <button id="reload" class="btn btn-outline-secondary btn-sm" type="button"><i class="bi bi-arrow-clockwise me-1"></i>Actualizar</button>
+          </div>
+        </div>
+        <div class="section card shadow-sm p-3 mb-4">
+          <div class="results-toolbar top-controls">
+            <div class="pager-size">
+              <label for="pageSize" class="mb-0">Ver</label>
+              <select id="pageSize" class="form-select form-select-sm"><option value="10" selected>10</option><option value="25">25</option><option value="50" >50</option><option value="100">100</option><option value="all">Todo</option></select>
+            </div>
+            <div id="pagination" class="pager-controls">
+              <button id="prevPage" class="btn btn-outline-primary btn-sm" type="button"><i class="bi bi-chevron-left"></i></button>
+              <span id="pageInfo">1 / 1</span>
+              <button id="nextPage" class="btn btn-outline-primary btn-sm" type="button"><i class="bi bi-chevron-right"></i></button>
+            </div>
+          </div>
+          <!-- Tarjetas (Cards) -->
+          <div id="cards" class="cards"></div>
+          <!-- Lista (DataTable) -->
+          <div id="list" class="table-responsive">
+            <table id="dtTable" class="table table-striped table-bordered" style="width:100%; display:none;">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Tipo</th>
+                  <th>Monto</th>
+                  <th>DÃ­as</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <!-- Kanban -->
+          <div id="kanban" class="kanban"></div>
+          <div id="empty" class="alert alert-warning text-center d-none"></div>
+          <div class="results-toolbar bottom-controls">
+            <div class="pager-size">
+              <label for="pageSizeBottom" class="mb-0">Ver</label>
+              <select id="pageSizeBottom" class="form-select form-select-sm"><option value="10" selected>10</option><option value="25">25</option><option value="50" >50</option><option value="100">100</option><option value="all">Todo</option></select>
+            </div>
+            <div id="paginationBottom" class="pager-controls">
+              <button id="prevPageBottom" class="btn btn-outline-primary btn-sm" type="button"><i class="bi bi-chevron-left"></i></button>
+              <span id="pageInfoBottom">1 / 1</span>
+              <button id="nextPageBottom" class="btn btn-outline-primary btn-sm" type="button"><i class="bi bi-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop" hidden></div>
+  <div class="scroll-nav" aria-label="NavegaciÃ³n rÃ¡pida">
+    <button id="scrollTopBtn" class="btn btn-primary btn-sm" type="button" aria-label="Ir al inicio"><i class="bi bi-arrow-up"></i></button>
+    <button id="scrollBottomBtn" class="btn btn-primary btn-sm" type="button" aria-label="Ir al final"><i class="bi bi-arrow-down"></i></button>
+  </div>
+
+  <section id="modal" class="modal" aria-hidden="true">
+    <article class="modal-card">
+      <header class="modal-head d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-2">
+          <span id="mdCode" class="badge bg-primary fs-6">-</span>
+          <h3 id="mdTitle" class="modal-title mb-0">Detalle</h3>
+        </div>
+        <button id="mdClose" class="btn btn-outline-secondary btn-sm" type="button"><i class="bi bi-x-lg"></i> Cerrar</button>
+      </header>
+
+      <div class="row g-2 mb-2">
+        <div class="col-md-4"><div class="box"><b>Organismo</b><span id="mdOrg">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Producto</b><span id="mdProv">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Monto</b><span id="mdMonto">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>PublicaciÃ³n</b><span id="mdPub">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Cierre</b><span id="mdCloseDate">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>DÃ­as</b><span id="mdDias">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Tipo LicitaciÃ³n</b><span id="mdCat">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Estado</b><span id="mdEstado">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Prioridad</b><span id="mdPrio">-</span></div></div>
+      </div>
+
+      <div class="mb-3">
+        <b class="text-secondary small">DescripciÃ³n</b>
+        <div id="mdDesc" class="full"></div>
+      </div>
+
+      <section class="edit">
+        <strong class="text-primary mb-2">GestiÃ³n</strong>
+        <div class="row g-2">
+          <div class="col-md-4">
+            <div class="field">
+              <label for="edVisto">Visto</label>
+              <select id="edVisto" class="form-select">
+                <option value="FALSE">No visto</option>
+                <option value="TRUE">Visto</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="field">
+              <label for="edEstado">Estado</label>
+              <select id="edEstado" class="form-select">
+                <option value="Sin Evaluar">Sin Evaluar</option>
+                <option value="Descartada">Descartada</option>
+                <option value="En Proceso">En Proceso</option>
+                <option value="Aplicada">Aplicada</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="field">
+              <label for="edOwner">Responsable</label>
+              <input id="edOwner" type="text" class="form-control" placeholder="Ej: Camila P." />
+            </div>
+          </div>
+        </div>
+        <div class="field mt-2">
+          <label for="edCom">Comentario</label>
+          <textarea id="edCom" rows="3" class="form-control" placeholder="Notas de seguimiento comercial..."></textarea>
+        </div>
+        <div class="save d-flex justify-content-end gap-2 mt-3">
+          <button id="openDoc" class="btn btn-outline-info btn-sm" type="button"><i class="bi bi-box-arrow-up-right"></i> Abrir documento</button>
+          <button id="save" class="btn btn-success btn-sm" type="button"><i class="bi bi-save"></i> Guardar cambios</button>
+        </div>
+      </section>
+    </article>
+  </section>
+
+  <section id="fieldsModal" class="modal" aria-hidden="true">
+    <article class="modal-card">
+      <header class="modal-head">
+        <div>
+          <h3 class="modal-title">Campos CSV (headers)</h3>
+        </div>
+        <button id="fieldsClose" class="close" type="button">Cerrar</button>
+      </header>
+      <div id="fieldsList" class="full" style="white-space:pre-wrap; max-height:60vh; overflow:auto;">
+        <!-- Lista de campos se llenarÃ¡ dinÃ¡micamente -->
+      </div>
+    </article>
+  </section>
+
+  <div id="toast" class="toast">Accion simulada</div>
+
+  <!-- Dependencias JS: jQuery, DataTables y Bootstrap -->
+  <!-- jQuery debe ir primero y sin integrity para evitar bloqueos -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js" crossorigin="anonymous"></script>
+  <!-- DataTables depende de jQuery -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+  <!-- Bootstrap debe ir despuÃ©s de jQuery si usas plugins que dependen de Ã©l -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTFm45Y6dS_yQGBtyYW0Zql9mxTaasWeTk0T_IxU9Esr0i-yGhGmHygxDb3psjrVJTVnEimAAAhQoMd/pub?gid=767150855&single=true&output=csv";
+    const GESTION_PUBLIC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTFm45Y6dS_yQGBtyYW0Zql9mxTaasWeTk0T_IxU9Esr0i-yGhGmHygxDb3psjrVJTVnEimAAAhQoMd/pub?gid=1084871879&single=true&output=csv";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCXFV9J1ZY2A5CPejzHur4KaVVP96z4G9G9YQRUAjXhhOHhQ5LZG6JxJA3qn5gA_Q67w/exec";
+
+    const st = { rows: [], filtered: [], view: "cards", selected: null, currentPage: 1, pageSize: '10', gestionMap: {} };
+    const GESTION_CACHE_KEY = "cm-gestion-cache";
+
+    const el = {
+      q: document.getElementById("q"),
+      cat: document.getElementById("cat"),
+      org: document.getElementById("org"),
+      producto: document.getElementById("producto"),
+      estado: document.getElementById("estado"),
+      visto: document.getElementById("visto"),
+      gestion: document.getElementById("gestion"),
+      quickUrg: document.getElementById("quickUrg"),
+      quickNew: document.getElementById("quickNew"),
+      quickFree: document.getElementById("quickFree"),
+      reset: document.getElementById("reset"),
+      pageSize: document.getElementById("pageSize"),
+      pageSizeBottom: document.getElementById("pageSizeBottom"),
+      prevPage: document.getElementById("prevPage"),
+      prevPageBottom: document.getElementById("prevPageBottom"),
+      nextPage: document.getElementById("nextPage"),
+      nextPageBottom: document.getElementById("nextPageBottom"),
+      pageInfo: document.getElementById("pageInfo"),
+      pageInfoBottom: document.getElementById("pageInfoBottom"),
+      viewCards: document.getElementById("viewCards"),
+      viewList: document.getElementById("viewList"),
+      viewBoard: document.getElementById("viewBoard"),
+      reload: document.getElementById("reload"),
+      cards: document.getElementById("cards"),
+      list: document.getElementById("list"),
+      kanban: document.getElementById("kanban"),
+      empty: document.getElementById("empty"),
+      kNew: document.getElementById("kNew"),
+      kProc: document.getElementById("kProc"),
+      kApl: document.getElementById("kApl"),
+      kDesc: document.getElementById("kDesc"),
+      kMonto: document.getElementById("kMonto"),
+      mTotal: document.getElementById("mTotal"),
+      mShow: document.getElementById("mShow"),
+      mUpd: document.getElementById("mUpd"),
+      themeToggle: document.getElementById("themeToggle"),
+      sidebarToggle: document.getElementById("sidebarToggle"),
+      sidebarClose: document.getElementById("sidebarClose"),
+      sidebarBackdrop: document.getElementById("sidebarBackdrop"),
+      scrollTopBtn: document.getElementById("scrollTopBtn"),
+      scrollBottomBtn: document.getElementById("scrollBottomBtn"),
+      modal: document.getElementById("modal"),
+      mdClose: document.getElementById("mdClose"),
+      mdCode: document.getElementById("mdCode"),
+      mdTitle: document.getElementById("mdTitle"),
+      mdOrg: document.getElementById("mdOrg"),
+      mdProv: document.getElementById("mdProv"),
+      mdMonto: document.getElementById("mdMonto"),
+      mdPub: document.getElementById("mdPub"),
+      mdCloseDate: document.getElementById("mdCloseDate"),
+      mdDias: document.getElementById("mdDias"),
+      mdCat: document.getElementById("mdCat"),
+      mdEstado: document.getElementById("mdEstado"),
+      mdPrio: document.getElementById("mdPrio"),
+      mdDesc: document.getElementById("mdDesc"),
+      edVisto: document.getElementById("edVisto"),
+      edEstado: document.getElementById("edEstado"),
+      edOwner: document.getElementById("edOwner"),
+      edCom: document.getElementById("edCom"),
+      openDoc: document.getElementById("openDoc"),
+      save: document.getElementById("save"),
+      toast: document.getElementById("toast"),
+      fechaDesde: document.getElementById("fechaDesde"),
+      fechaHasta: document.getElementById("fechaHasta"),
+      catGeneral: document.getElementById("catGeneral"),
+      ordenarPor: document.getElementById("ordenarPor"),
+      exportarExcel: document.getElementById("exportarExcel")
+    };
+
+    function toNumber(value) {
+      if (value == null || value === "") return 0;
+      const clean = String(value).replace(/[.$\s]/g, "").replace(/,/g, ".");
+      const n = Number(clean);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function normalizeRow(r) {
+      // Preserve the original CSV row keys exactly under _raw
+      const raw = {};
+      for (const k in r) {
+        // keep original header keys as-is (trim whitespace)
+        const key = String(k || "").trim();
+        raw[key] = r[k];
+      }
+
+      // Start output with all original keys intact
+      const out = Object.assign({}, raw);
+      out._raw = Object.assign({}, raw);
+
+      // Provide convenient aliases only if they are missing, do NOT remove or rename original headers
+      if (!out.CodigoExterno) out.CodigoExterno = raw['ID Licitacion'] || raw['ID LicitaciÃ³n'] || raw.CodigoExterno || raw['Codigo Externo'] || "";
+      if (!out.Nombre) out.Nombre = raw.Nombre || raw['Nombre'] || "";
+      out.Monto = toNumber(raw['Monto Estimado'] || raw.Monto || raw['Monto'] || 0);
+      if (!out.FechaCierre) out.FechaCierre = raw['Fecha Cierre'] || raw.FechaCierre || "";
+      if (!out.Descripcion) out.Descripcion = raw.Descripcion || raw['Descripcion'] || raw['DescripciÃ³n'] || "";
+      if (!out.TipoLicitacion) out.TipoLicitacion = raw['Tipo Licitacion'] || raw.Categoria || raw['Codigo Tipo'] || "Sin tipo";
+      if (!out.Organismo) out.Organismo = raw['Nombre Organismo'] || raw.Organismo || "";
+      if (!out.EstadoAPI) out.EstadoAPI = raw.Estado || raw['Estado'] || "";
+      if (!out.CodigoEstadoAPI) out.CodigoEstadoAPI = raw['Codigo Estado'] || raw['CodigoEstado'] || "";
+      if (!out.FechaPublicacion) out.FechaPublicacion = raw['Fecha Publicacion'] || raw.FechaPublicacion || "";
+      if (!out.DiasRestantes) out.DiasRestantes = raw['Dias Disponibles'] || raw.DiasRestantes || raw['Dias Cierre Licitacion'] || "";
+      if (!out.URLLicitacion) out.URLLicitacion = raw.URL || raw.URLLicitacion || raw['URL'] || "";
+      out.Visto = String(raw.Visto || raw['Visto'] || out.Visto || "FALSE").toUpperCase();
+      if (!out.EstadoTrabajo) out.EstadoTrabajo = raw.EstadoTrabajo || raw['EstadoTrabajo'] || raw['Estado Trabajo'] || "Sin Evaluar";
+      if (!out.Producto) out.Producto = raw['Nombre Producto (1er Item)'] || raw.Producto || raw.Proveedor || "";
+      // compute general classification and subcategory
+      const cls = classifyProduct(out.Producto || out.TipoLicitacion || out.Organismo || "");
+      out.CategoriaGeneral = cls.general;
+      out.Subcategoria = cls.sub;
+      if (!out.Responsable) out.Responsable = raw.Responsable || raw['Nombre Usuario'] || "";
+      if (!out.Comentario) out.Comentario = raw.Comentario || "";
+      if (!out.Prioridad) out.Prioridad = raw.Prioridad || "Media";
+
+      return out;
+    }
+
+    const fmt = n => new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(Number(n) || 0);
+    const dateOnly = value => {
+      if (!value) return "-";
+      const s = String(value).trim();
+
+      const isoMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+
+      const slashMatch = s.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})/);
+      if (slashMatch) return `${slashMatch[3]}-${slashMatch[2]}-${slashMatch[1]}`;
+
+      const ymdMatch = s.match(/^(\d{4})[\/\-](\d{2})[\/\-](\d{2})/);
+      if (ymdMatch) return `${ymdMatch[1]}-${ymdMatch[2]}-${ymdMatch[3]}`;
+
+      const d = new Date(s);
+      if (Number.isNaN(d.getTime())) return s;
+
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Santiago",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(d);
+      const map = {};
+      for (const p of parts) map[p.type] = p.value;
+      return `${map.year}-${map.month}-${map.day}`;
+    };
+    const todayOnly = () => {
+      // Fuerza "hoy" en zona horaria Chile para evitar desfases del navegador del usuario.
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Santiago",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(new Date());
+      const map = {};
+      for (const p of parts) map[p.type] = p.value;
+      return `${map.year}-${map.month}-${map.day}`;
+    };
+    const isNew = r => {
+      const pub = dateOnly(r.FechaPublicacion);
+      if (!pub || pub === "-" || pub.length !== 10) return false;
+      return pub === todayOnly();
+    };
+    const esc = t => String(t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#039;");
+
+    // Debounce helper to reduce frequent re-renders when user types/changes filters
+    function debounce(fn, wait) {
+      let t;
+      return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    // Debounced version of apply() (apply is hoisted, so safe to reference here)
+    const applyDebounced = debounce(() => apply(), 180);
+
+    // Centralized data update to avoid duplicated sequences of fillFilters/apply/render
+    function updateData(rows) {
+      st.rows = rows;
+      migrateLegacyDefaultStatus(st.rows);
+      st.filtered = Array.isArray(rows) ? [...rows] : [];
+      fillFilters();
+      st.currentPage = 1;
+      updatePagination();
+      render();
+      kpis();
+    }
+
+    function classifyProduct(text) {
+      const s = String(text || "").toLowerCase();
+      const mapping = [
+        { general: 'Salud', subs: [['Medic', /medic|hospital|salud|clÃ­nic|enfermer/], ['Servicios mÃ©dicos', /servicio.*mÃ©dic|prestaciones mÃ©dicas/]] },
+        { general: 'ConstrucciÃ³n', subs: [['Obras', /obra|construcc|pavi|obra/], ['Materiales', /material|grava|cemento|hormigÃ³n|moldaje/]] },
+        { general: 'EducaciÃ³n', subs: [['CapacitaciÃ³n', /capacitaci|escuela|docent/]] },
+        { general: 'Servicios', subs: [['Limpieza', /aseo|limpiez/], ['Seguridad', /guardia|segurid/], ['Transporte', /transporte|autobÃºs|moviliz/]] },
+        { general: 'TecnologÃ­a', subs: [['Software', /soft|software|sistema|plataforma/], ['Equipamiento', /equipo|servidor|hosting/]] },
+        { general: 'Suministros', subs: [['Insumos', /insumo|insumos|suministr|reactiv|material auxiliar/]] },
+        { general: 'Alimentos', subs: [['Catering', /catering|desayun|banquet/]] }
+      ];
+
+      for (const m of mapping) {
+        for (const sub of m.subs) {
+          if (sub[1].test(s)) return { general: m.general, sub: sub[0] };
+        }
+      }
+      // fallback heuristics
+      if (/servicio|contrataciÃ³n|contrato/.test(s)) return { general: 'Servicios', sub: 'General' };
+      if (/mantenimiento|mantenciÃ³n|mantenim/.test(s)) return { general: 'Servicios', sub: 'Mantenimiento' };
+      if (/pieza|pieza|repuesto|insumo|material/.test(s)) return { general: 'Suministros', sub: 'General' };
+      return { general: 'Otros', sub: 'Otros' };
+    }
+
+    function toast(msg) {
+      el.toast.textContent = msg;
+      el.toast.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => el.toast.classList.remove("show"), 1800);
+    }
+
+    function applyTheme(theme) {
+      const next = theme === "dark" ? "dark" : "light";
+      document.body.setAttribute("data-theme", next);
+      // also set Bootstrap theme attribute so Bootstrap components follow dark mode
+      document.body.setAttribute("data-bs-theme", next);
+      if (el.themeToggle) el.themeToggle.textContent = next === "dark" ? "Modo claro" : "Modo oscuro";
+      localStorage.setItem("cm-theme", next);
+    }
+
+    function toggleTheme() {
+      const current = document.body.getAttribute("data-theme") || "light";
+      const next = current === "dark" ? "light" : "dark";
+      applyTheme(next);
+      toast(`Tema ${next === "dark" ? "oscuro" : "claro"} activado.`);
+    }
+
+    const isMobileLayout = () => window.matchMedia && window.matchMedia("(max-width: 980px)").matches;
+
+    function openSidebar() {
+      document.body.classList.add("sidebar-open");
+      if (el.sidebarBackdrop) el.sidebarBackdrop.hidden = false;
+    }
+
+    function closeSidebar() {
+      document.body.classList.remove("sidebar-open");
+      if (el.sidebarBackdrop) el.sidebarBackdrop.hidden = true;
+    }
+
+    function toggleSidebar() {
+      if (isMobileLayout()) {
+        if (document.body.classList.contains("sidebar-open")) closeSidebar();
+        else openSidebar();
+        return;
+      }
+
+      document.body.classList.toggle("sidebar-collapsed");
+    }
+
+    function syncSidebarLayout() {
+      if (isMobileLayout()) {
+        document.body.classList.remove("sidebar-collapsed");
+        if (!document.body.classList.contains("sidebar-open")) {
+          closeSidebar();
+        }
+        return;
+      }
+
+      closeSidebar();
+    }
+
+    function statusClass(s) {
+      if (s === "Aplicada") return "st-tr";
+      if (s === "En Proceso") return "st-ep";
+      return "st-nt";
+    }
+
+    function ensureHttpsMercadoPublicoUrl_(url) {
+      if (!url) return "";
+      let out = String(url).trim();
+      if (!out) return "";
+      if (/^\/\//.test(out)) out = "https:" + out;
+      if (!/^https?:\/\//i.test(out)) out = "https://" + out;
+      if (/^http:\/\/(www\.)?mercadopublico\.cl\//i.test(out)) {
+        out = out.replace(/^http:\/\//i, "https://");
+      }
+      return out;
+    }
+
+    function extractMercadoPublicoUrlCandidates_(row) {
+      const raw = row && row._raw ? row._raw : {};
+      const candidates = [
+        row && row.URLLicitacion,
+        row && row.URL,
+        raw.URLLicitacion,
+        raw.URL,
+        raw.url,
+        raw.Link,
+        raw.link,
+        raw['URL Licitacion'],
+        raw['URL LicitaciÃ³n'],
+        raw['UrlLicitacion'],
+        raw['Url Licitacion'],
+        raw['Url LicitaciÃ³n']
+      ].filter(Boolean).map(v => String(v).trim());
+
+      const expanded = [];
+      for (const c of candidates) {
+        const normalized = ensureHttpsMercadoPublicoUrl_(c);
+        if (!normalized) continue;
+        expanded.push(normalized);
+        if (/\/Home\/Error\/Index\//i.test(normalized)) {
+          const wrappedMatch = normalized.match(/[?&]url=([^&]+)/i);
+          if (wrappedMatch && wrappedMatch[1]) {
+            try {
+              expanded.push(ensureHttpsMercadoPublicoUrl_(decodeURIComponent(wrappedMatch[1])));
+            } catch (_) {}
+          }
+        }
+      }
+      return [...new Set(expanded.filter(Boolean))];
+    }
+
+    function buildPublicoUrlFromRow(row) {
+      const id = row && (row.CodigoExterno || row._raw && (row._raw['ID Licitacion'] || row._raw['ID LicitaciÃ³n'] || row._raw['CodigoExterno']));
+      if (id) {
+        return "https://www.mercadopublico.cl/fichaLicitacion.html?idLicitacion=" + encodeURIComponent(id);
+      }
+
+      const candidates = extractMercadoPublicoUrlCandidates_(row);
+      const anyMercadoPublico = candidates.find(u => /^https?:\/\/(www\.)?mercadopublico\.cl\//i.test(u) && !/\/Home\/Error\/Index\//i.test(u));
+      if (anyMercadoPublico) {
+        return anyMercadoPublico;
+      }
+
+      return "";
+    }
+
+    function applyGestionData(rows, gestionMap) {
+      if (!Array.isArray(rows) || !gestionMap) return rows;
+      for (const row of rows) {
+        const id = String(row.CodigoExterno || "").trim();
+        const g = gestionMap[id];
+        if (!g) continue;
+        row.Visto = String(g.visto || row.Visto || "FALSE").toUpperCase();
+        row.EstadoTrabajo = g.estadoTrabajo || row.EstadoTrabajo || "Sin Evaluar";
+        row.Responsable = g.responsable || row.Responsable || "";
+        row.Comentario = g.comentario || row.Comentario || "";
+        row._gestion = g;
+      }
+      return rows;
+    }
+
+    function migrateLegacyDefaultStatus(rows) {
+      if (!Array.isArray(rows)) return 0;
+      let migrated = 0;
+      for (const row of rows) {
+        const estado = String(row.EstadoTrabajo || "").trim();
+        const visto = String(row.Visto || "FALSE").toUpperCase();
+        const responsable = String(row.Responsable || "").trim();
+        const comentario = String(row.Comentario || "").trim();
+        if (estado === "Descartada" && visto !== "TRUE" && !responsable && !comentario) {
+          row.EstadoTrabajo = "Sin Evaluar";
+          migrated++;
+        }
+      }
+      return migrated;
+    }
+
+    function normalizeGestionCsvRow(row) {
+      const raw = {};
+      for (const key in row || {}) {
+        raw[String(key || "").trim()] = row[key];
+      }
+
+      const id = raw.id || raw.ID || raw.codigo_externo || raw.CodigoExterno || raw['Codigo Externo'] || raw['ID Licitacion'] || raw['ID LicitaciÃ³n'] || "";
+      const visto = raw.visto || raw.Visto || raw['Visto'] || "FALSE";
+      const estadoTrabajo = raw.estadoTrabajo || raw.EstadoTrabajo || raw['Estado Trabajo'] || raw.Estado || "Sin Evaluar";
+      const responsable = raw.responsable || raw.Responsable || raw['Nombre Usuario'] || raw['Usuario'] || "";
+      const comentario = raw.comentario || raw.Comentario || raw['Comentario'] || "";
+
+      return {
+        id: String(id || "").trim(),
+        visto: String(visto || "FALSE").toUpperCase(),
+        estadoTrabajo: String(estadoTrabajo || "Sin Evaluar").trim() || "Sin Evaluar",
+        responsable: String(responsable || "").trim(),
+        comentario: String(comentario || "").trim(),
+        actualizadoEn: raw.actualizadoEn || raw.actualizado_en || raw['Actualizado en'] || ""
+      };
+    }
+
+    function parsePublishedSheetTableHtml(html, preferredHeaders = []) {
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const tables = [...doc.querySelectorAll("table")];
+      if (!tables.length) return [];
+
+      const norm = value => String(value || "").trim().toLowerCase();
+      const preferred = preferredHeaders.map(norm).filter(Boolean);
+
+      const scored = tables.map(table => {
+        const rows = [...table.querySelectorAll("tr")];
+        if (!rows.length) return { table, score: -1, rows: [] };
+
+        const headers = [...rows[0].querySelectorAll("th,td")]
+          .map(cell => String(cell.textContent || "").trim())
+          .filter(Boolean);
+        const headerNorms = headers.map(norm);
+
+        let score = rows.length * 10 + headers.length;
+        if (preferred.length) {
+          for (const expected of preferred) {
+            if (headerNorms.some(h => h.includes(expected) || expected.includes(h))) score += 50;
+          }
+        }
+
+        if (headerNorms.some(h => /id licit|visto|estadotrabajo|responsable|comentario/i.test(h))) score += 75;
+        if (headerNorms.some(h => /codigoexterno|nombre|organismo|fecha public|fecha cierre/i.test(h))) score += 75;
+
+        return { table, score, rows, headers };
+      });
+
+      const best = scored.sort((a, b) => b.score - a.score)[0];
+      if (!best || best.score < 0 || !best.rows.length) return [];
+
+      const headers = best.headers || [];
+      const dataRows = best.rows.slice(1);
+      return dataRows.map(tr => {
+        const cells = [...tr.querySelectorAll("th,td")].map(cell => String(cell.textContent || "").trim());
+        const out = {};
+        headers.forEach((header, index) => {
+          out[header] = cells[index] || "";
+        });
+        return out;
+      }).filter(row => Object.values(row).some(v => String(v || "").trim() !== ""));
+    }
+
+    function loadPublishedSheetRows(url) {
+      return new Promise((resolve, reject) => {
+        fetch(url, { cache: "no-store" })
+          .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+            return res.text();
+          })
+          .then(text => {
+            const trimmed = String(text || "").trim();
+            if (!trimmed) {
+              resolve([]);
+              return;
+            }
+
+            if (trimmed.startsWith("<")) {
+              const preferredHeaders = /gid=350658914/i.test(url)
+                ? ["ID Licitacion", "Visto", "EstadoTrabajo", "Responsable", "Comentario", "ActualizadoEn"]
+                : ["CodigoExterno", "Nombre", "Organismo", "Fecha Publicacion", "Fecha Cierre", "Estado"];
+              resolve(parsePublishedSheetTableHtml(trimmed, preferredHeaders));
+              return;
+            }
+
+            if (typeof Papa === "undefined") {
+              reject(new Error("PapaParse no estÃ¡ disponible"));
+              return;
+            }
+
+            const parsed = Papa.parse(trimmed, {
+              header: true,
+              skipEmptyLines: true,
+              transformHeader: header => String(header || "").replace(/^\uFEFF/, "").trim()
+            });
+            resolve((parsed.data || []).filter(row => Object.values(row || {}).some(v => String(v || "").trim() !== "")));
+          })
+          .catch(err => reject(err instanceof Error ? err : new Error(String(err || "Error al leer la hoja publicada"))));
+      });
+    }
+
+    function loadGestionCache() {
+      try {
+        const raw = localStorage.getItem(GESTION_CACHE_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch (_) {
+        return {};
+      }
+    }
+
+    function saveGestionCache(map) {
+      try {
+        localStorage.setItem(GESTION_CACHE_KEY, JSON.stringify(map || {}));
+      } catch (_) {}
+    }
+
+    async function syncGestionData() {
+      if (!GESTION_PUBLIC_CSV_URL) return;
+
+      try {
+        const rows = await loadPublishedSheetRows(GESTION_PUBLIC_CSV_URL);
+        if (rows && rows.length) {
+          const gestionMap = {};
+          for (const item of rows) {
+            const normalized = normalizeGestionCsvRow(item);
+            if (!normalized || !normalized.id) continue;
+            gestionMap[String(normalized.id).trim()] = normalized;
+          }
+
+          st.gestionMap = gestionMap;
+          saveGestionCache(gestionMap);
+          applyGestionData(st.rows, gestionMap);
+          applyGestionData(st.filtered, gestionMap);
+          render();
+          if (st.view === "list") refreshDataTable();
+          return;
+        }
+
+        // Si la hoja responde OK pero sin filas, se considera fuente vacia y se limpia cache local.
+        st.gestionMap = {};
+        saveGestionCache({});
+        applyGestionData(st.rows, {});
+        applyGestionData(st.filtered, {});
+        render();
+        if (st.view === "list") refreshDataTable();
+      } catch (err) {
+        const cached = loadGestionCache();
+        if (cached && Object.keys(cached).length) {
+          st.gestionMap = cached;
+          applyGestionData(st.rows, cached);
+          applyGestionData(st.filtered, cached);
+          render();
+          if (st.view === "list") refreshDataTable();
+          toast("Sin conexiÃ³n a Sheet: mostrando cambios guardados en este navegador.");
+          return;
+        }
+
+        console.warn("No se pudo cargar gestiÃ³n publicada:", err);
+      }
+    }
+
+    function flagByDays(dias) {
+      const n = Number(dias);
+      if (!Number.isFinite(n)) return "f-nv";
+      if (n <= 2) return "f-u";
+      if (n <= 7) return "f-new";
+      return "f-v";
+    }
+
+    function fillFilters() {
+      const orgs = [...new Set(st.rows.map(r => r.Organismo).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const cats = [...new Set(st.rows.map(r => r.TipoLicitacion).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const productos = [...new Set(st.rows.map(r => r.Producto).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const generales = [...new Set(st.rows.map(r => r.CategoriaGeneral).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const estadosApi = [...new Set(st.rows.map(r => String(r.EstadoAPI || "").trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      el.cat.innerHTML = '<option value="">Todas</option>' + cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+      el.org.innerHTML = '<option value="">Todos</option>' + orgs.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join("");
+      if (el.catGeneral) el.catGeneral.innerHTML = '<option value="">Todas</option>' + generales.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+      if (el.producto) el.producto.innerHTML = '<option value="">Todos</option>' + productos.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join("");
+      if (el.estado) {
+        el.estado.innerHTML = '<option value="">Todos</option>' + estadosApi.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join("");
+      }
+      if (el.visto) {
+        el.visto.innerHTML = [
+          '<option value="">Todos</option>',
+          '<option value="TRUE">Visto</option>',
+          '<option value="FALSE">No visto</option>',
+          '<option value="NUEVO">Nuevos (Solo las del dia)</option>'
+        ].join("");
+      }
+    }
+
+    function apply() {
+      const q = (el.q && el.q.value ? String(el.q.value).trim().toLowerCase() : "");
+      const cat = (el.cat && el.cat.value) ? el.cat.value : "";
+      const org = (el.org && el.org.value) ? el.org.value : "";
+      const prod = (el.producto && el.producto.value) ? el.producto.value : "";
+      const catGen = (el.catGeneral && el.catGeneral.value) ? el.catGeneral.value : "";
+      const est = (el.estado && el.estado.value) ? el.estado.value : "";
+      const visto = (el.visto && el.visto.value) ? el.visto.value : "";
+      const gestion = (el.gestion && el.gestion.value) ? el.gestion.value : "";
+      const fechaDesde = (el.fechaDesde && el.fechaDesde.value) ? el.fechaDesde.value : "";
+      const fechaHasta = (el.fechaHasta && el.fechaHasta.value) ? el.fechaHasta.value : "";
+      const ordenarPor = (el.ordenarPor && el.ordenarPor.value) ? el.ordenarPor.value : "";
+
+      st.filtered = st.rows.filter(r => {
+        const text = [r.Nombre, r.CodigoExterno, r.Organismo, r.Producto, r.Descripcion, r.TipoLicitacion].join(" ").toLowerCase();
+        const mQ = !q || text.includes(q);
+        const mCat = !cat || r.TipoLicitacion === cat;
+        const mOrg = !org || r.Organismo === org;
+        const mProd = !prod || (r.Producto === prod);
+        const mCatGen = !catGen || (r.CategoriaGeneral === catGen);
+        const estadoLicitacion = String(r.EstadoAPI || "").trim();
+        const mEst = !est || estadoLicitacion === est;
+        const estadoGestion = String(r.EstadoTrabajo || "Sin Evaluar").trim() || "Sin Evaluar";
+        const mGestion = !gestion || estadoGestion === gestion;
+        let mV = true;
+        if (visto === "TRUE") mV = r.Visto === "TRUE";
+        if (visto === "FALSE") mV = r.Visto !== "TRUE";
+        if (visto === "NUEVO") mV = isNew(r);
+        // Filtro de fechas: solo considera la fecha de emisiÃ³n/publicaciÃ³n.
+        // Si se completa Desde/Hasta, muestra las publicadas dentro de ese rango.
+        const hasDateRange = Boolean(fechaDesde || fechaHasta);
+        const fp = dateOnly(r.FechaPublicacion);
+        const start = fechaDesde || "0000-01-01";
+        const end = fechaHasta || "9999-12-31";
+        const mFecha = !hasDateRange ? true : (fp && fp !== "-" && fp >= start && fp <= end);
+        return mQ && mCat && mOrg && mProd && mCatGen && mEst && mGestion && mV && mFecha;
+      });
+
+      // Ordenar
+      if (ordenarPor === "dias") {
+        st.filtered.sort((a, b) => (Number(a.DiasRestantes) || 9999) - (Number(b.DiasRestantes) || 9999));
+      } else if (ordenarPor === "dias_desc") {
+        st.filtered.sort((a, b) => (Number(b.DiasRestantes) || -9999) - (Number(a.DiasRestantes) || -9999));
+      } else if (ordenarPor === "monto") {
+        st.filtered.sort((a, b) => (Number(b.Monto) || 0) - (Number(a.Monto) || 0));
+      } else if (ordenarPor === "monto_asc") {
+        st.filtered.sort((a, b) => (Number(a.Monto) || 0) - (Number(b.Monto) || 0));
+      } else if (ordenarPor === "nombre") {
+        st.filtered.sort((a, b) => String(a.Nombre || "").localeCompare(String(b.Nombre || ""), "es"));
+      } else if (ordenarPor === "nombre_desc") {
+        st.filtered.sort((a, b) => String(b.Nombre || "").localeCompare(String(a.Nombre || ""), "es"));
+      }
+
+      // reset to first page on filter change
+      st.currentPage = 1;
+      updatePagination();
+      render();
+      kpis();
+    }
+
+    function kpis() {
+      const total = st.rows.length;
+      const nwe = st.rows.filter(r => isNew(r)).length;
+      const proc = st.rows.filter(r => r.EstadoTrabajo === "En Proceso").length;
+      const apl = st.rows.filter(r => r.EstadoTrabajo === "Aplicada").length;
+      const desc = st.rows.filter(r => r.EstadoTrabajo === "Descartada").length;
+      const m = st.rows.reduce((acc, r) => acc + (Number(r.Monto) || 0), 0);
+
+      if (el.kNew) el.kNew.textContent = nwe;
+      if (el.kProc) el.kProc.textContent = proc;
+      if (el.kApl) el.kApl.textContent = apl;
+      if (el.kDesc) el.kDesc.textContent = desc;
+      if (el.kMonto) el.kMonto.textContent = fmt(m);
+      if (el.mTotal) el.mTotal.textContent = `Total: ${total}`;
+      if (el.mShow) el.mShow.textContent = `Mostrando: ${st.filtered.length}`;
+      if (el.mUpd) el.mUpd.textContent = `Actualizado: ${new Date().toLocaleString("es-CL")}`;
+    }
+
+    function loadExcelJSScript() {
+      return new Promise((resolve, reject) => {
+        if (typeof ExcelJS !== 'undefined') return resolve(window.ExcelJS);
+        const existing = document.querySelector('script[src*="exceljs"]');
+        if (existing) {
+          existing.addEventListener('load', () => resolve(window.ExcelJS));
+          existing.addEventListener('error', () => reject(new Error('Error al cargar ExcelJS')));
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js';
+        script.onload = () => resolve(window.ExcelJS);
+        script.onerror = () => reject(new Error('Error al cargar ExcelJS'));
+        document.head.appendChild(script);
+      });
+    }
+
+    async function exportToExcel() {
+      try {
+        await loadExcelJSScript();
+      } catch (err) {
+        console.error(err);
+        toast('No se pudo cargar ExcelJS. Reintenta con conexiÃ³n estable.');
+        return;
+      }
+
+      if (typeof ExcelJS === 'undefined') {
+        toast('No se pudo cargar ExcelJS.');
+        return;
+      }
+
+      const data = st.filtered.slice();
+      if (!data.length) {
+        toast('No hay licitaciones para exportar.');
+        return;
+      }
+
+      const book = new ExcelJS.Workbook();
+      const sheet = book.addWorksheet('Licitaciones');
+
+      const columns = [
+        { header: 'CÃ³digo', key: 'CodigoExterno', width: 20 },
+        { header: 'Nombre', key: 'Nombre', width: 45 },
+        { header: 'Organismo', key: 'Organismo', width: 30 },
+        { header: 'Producto', key: 'Producto', width: 30 },
+        { header: 'Tipo', key: 'TipoLicitacion', width: 25 },
+        { header: 'Monto', key: 'Monto', width: 15 },
+        { header: 'Fecha PublicaciÃ³n', key: 'FechaPublicacion', width: 18 },
+        { header: 'Fecha Cierre', key: 'FechaCierre', width: 18 },
+        { header: 'DÃ­as Restantes', key: 'DiasRestantes', width: 15 },
+        { header: 'Estado', key: 'EstadoTrabajo', width: 18 },
+        { header: 'Visto', key: 'Visto', width: 10 },
+        { header: 'Prioridad', key: 'Prioridad', width: 12 }
+      ];
+
+      sheet.columns = columns;
+
+      sheet.getRow(1).eachCell(cell => {
+        cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2747C7' } };
+        cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+      });
+
+      for (const row of data) {
+        sheet.addRow({
+          CodigoExterno: row.CodigoExterno || '',
+          Nombre: row.Nombre || '',
+          Organismo: row.Organismo || '',
+          Producto: row.Producto || '',
+          TipoLicitacion: row.TipoLicitacion || '',
+          Monto: row.Monto != null ? Number(row.Monto) : '',
+          FechaPublicacion: dateOnly(row.FechaPublicacion),
+          FechaCierre: dateOnly(row.FechaCierre),
+          DiasRestantes: row.DiasRestantes || '',
+          EstadoTrabajo: row.EstadoTrabajo || '',
+          Visto: row.Visto || '',
+          Prioridad: row.Prioridad || ''
+        });
+      }
+
+      sheet.views = [{ state: 'frozen', ySplit: 1 }];
+
+      const buffer = await book.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `licitaciones-${new Date().toISOString().slice(0,10)}.xlsx`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      toast(`Exportadas ${data.length} licitaciones a Excel.`);
+    }
+
+    function renderCards(rows) {
+      el.cards.innerHTML = rows.map(r => {
+        const visto = r.Visto === "TRUE";
+        return `
+          <article class="card">
+            <div class="head-row">
+              <span class="code">${esc(r.CodigoExterno)}</span>
+              <div class="flags">
+                <span class="flag ${flagByDays(r.DiasRestantes)}">${Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} dias` : "sin cierre"}</span>
+                ${isNew(r) ? '<span class="flag f-new">NUEVO</span>' : ""}
+                <span class="flag ${visto ? "f-v" : "f-nv"}">${visto ? "VISTO" : "NO VISTO"}</span>
+              </div>
+            </div>
+            <h3 class="name">${esc(r.Nombre)}</h3>
+            <p class="desc">${esc(r.Descripcion || "Sin descripcion")}</p>
+            <div class="kv">
+              <b>Tipo</b><span>${esc(r.TipoLicitacion)}</span>
+              <b>Organismo</b><span>${esc(r.Organismo)}</span>
+              <b>Producto</b><span>${esc(r.Producto || "-")}</span>
+            </div>
+            <div class="foot">
+              <div>
+                <div class="money">${fmt(r.Monto)}</div>
+                <span class="status ${statusClass(r.EstadoTrabajo)}">${esc(r.EstadoTrabajo)}</span>
+              </div>
+              <div class="actions">
+                <button class="link-btn" type="button" data-a="view" data-c="${esc(r.CodigoExterno)}">Ver</button>
+                <button class="link-btn" type="button" data-a="open" data-c="${esc(r.CodigoExterno)}">Abrir</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderList(rows) {
+      el.list.innerHTML = `
+        <header class="list-head">
+          <span>Nombre</span><span>Tipo</span><span>Monto</span><span>Dias</span><span>Estado</span><span>Acciones</span>
+        </header>
+        ${rows.map(r => `
+          <article class="list-row">
+            <div class="name-cell">
+              <strong>${esc(r.Nombre)}</strong>
+              <span>${esc(r.CodigoExterno)} - ${esc(r.Organismo)}</span>
+            </div>
+            <span>${esc(r.TipoLicitacion)}</span>
+            <span>${fmt(r.Monto)}</span>
+            <span>${Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} dias` : "-"}</span>
+            <span><span class="status ${statusClass(r.EstadoTrabajo)}">${esc(r.EstadoTrabajo)}</span></span>
+            <div class="actions">
+              <button class="link-btn" type="button" data-a="view" data-c="${esc(r.CodigoExterno)}">Ver</button>
+              <button class="link-btn" type="button" data-a="open" data-c="${esc(r.CodigoExterno)}">Abrir</button>
+            </div>
+          </article>
+        `).join("")}
+      `;
+    }
+
+    // DataTables integration
+    let dtInstance = null;
+
+    function buildTableData(rows) {
+      return rows.map(r => {
+        const name = `<strong>${esc(r.Nombre)}</strong><br/><small style="color:var(--muted);">${esc(r.CodigoExterno)} - ${esc(r.Organismo)}</small>`;
+        const tipo = esc(r.TipoLicitacion);
+        const monto = fmt(r.Monto);
+        const dias = Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} dias` : "-";
+        const estado = `<span class="status ${statusClass(r.EstadoTrabajo)}">${esc(r.EstadoTrabajo)}</span>`;
+        const actions = `<button class="link-btn" type="button" data-a="view" data-c="${esc(r.CodigoExterno)}">Ver</button> <button class="link-btn" type="button" data-a="open" data-c="${esc(r.CodigoExterno)}">Abrir</button>`;
+        return [name, tipo, monto, dias, estado, actions];
+      });
+    }
+
+    function initDataTable() {
+      if (!window.jQuery || !$.fn.DataTable) return;
+      const $tbl = $('#dtTable');
+      $tbl.show();
+      const data = buildTableData(st.filtered);
+      const pagingEnabled = st.pageSize !== 'all';
+
+      // If dtInstance exists, update data in place (faster)
+      if (dtInstance) {
+        try {
+          dtInstance.clear();
+          dtInstance.rows.add(data);
+          dtInstance.draw(false);
+          return;
+        } catch (e) { dtInstance = null; }
+      }
+
+      dtInstance = $tbl.DataTable({
+        data: data,
+        columns: [
+          { title: 'Nombre' },
+          { title: 'Tipo' },
+          { title: 'Monto' },
+          { title: 'DÃ­as' },
+          { title: 'Estado' },
+          { title: 'Acciones', orderable: false }
+        ],
+        deferRender: true,
+        ordering: true,
+        order: [[0, 'asc']],
+        pageLength: st.pageSize === 'all' ? -1 : Number(st.pageSize || 50),
+        lengthChange: false,
+        searching: true,
+        responsive: true,
+        dom: 't'
+      });
+
+      // keep top/bottom pager in sync when DataTable changes page/order/search
+      $tbl.off('draw.dt.pagerSync').on('draw.dt.pagerSync', () => updatePagination());
+
+      // bind external search box to DataTable search
+      if (el.q) {
+        $(el.q).off('input.dtsearch').on('input.dtsearch', function() { if (dtInstance) dtInstance.search(this.value).draw(); });
+      }
+    }
+
+    function refreshDataTable() {
+      if (!window.jQuery || !$.fn.DataTable) return initDataTable();
+      initDataTable();
+    }
+
+    function renderBoard(rows) {
+      const lanes = ["Sin Evaluar", "Descartada", "En Proceso", "Aplicada"];
+      el.kanban.innerHTML = lanes.map(l => {
+        const rs = rows.filter(r => (r.EstadoTrabajo || "Sin Evaluar") === l);
+        return `
+          <article class="lane">
+            <header class="lane-head"><span>${l}</span><span class="count">${rs.length}</span></header>
+            ${rs.map(r => `
+              <div class="mini">
+                <span class="mini-id">${esc(r.CodigoExterno)}</span>
+                <h4>${esc(r.Nombre)}</h4>
+              </div>
+            `).join("")}
+          </article>
+        `;
+      }).join("");
+    }
+
+    function syncDataTablePageSize() {
+      if (st.view === 'list' && dtInstance) {
+        const len = st.pageSize === 'all' ? -1 : Number(st.pageSize || 50);
+        try {
+          dtInstance.page.len(len).draw(false);
+        } catch (err) {
+          // fallback a reinicializar si page.len falla
+          try { dtInstance.page(0).draw(false); } catch (_) {}
+        }
+      }
+    }
+
+    function render() {
+      syncDataTablePageSize();
+      const rows = st.view === "board" ? st.filtered : getCurrentPageRows();
+      const empty = rows.length === 0;
+      if (el.empty) {
+        el.empty.classList.toggle("d-none", !empty);
+        el.empty.style.display = empty ? "block" : "none";
+      }
+
+      el.cards.style.display = st.view === "cards" ? "grid" : "none";
+      el.list.style.display = st.view === "list" ? "" : "none";
+      el.kanban.style.display = st.view === "board" ? "grid" : "none";
+
+      if (empty) {
+        el.cards.innerHTML = "";
+        // if DataTables is present we keep the table DOM but hide it, otherwise clear the fallback list HTML
+        if (!(window.jQuery && $.fn.DataTable)) el.list.innerHTML = "";
+        el.kanban.innerHTML = "";
+        if (window.jQuery && $.fn.DataTable) {
+          const tbl = document.getElementById('dtTable'); if (tbl) tbl.style.display = 'none';
+        }
+        return;
+      }
+
+      if (st.view === "cards") renderCards(rows);
+      if (st.view === "list") {
+        // If DataTables is available, use it (table is inside #dtTable). Otherwise fallback to renderList.
+        if (window.jQuery && $.fn.DataTable) {
+          // ensure cards/kanban hidden and show table
+          el.cards.style.display = "none";
+          el.kanban.style.display = "none";
+          // show table and populate
+          const tbl = document.getElementById('dtTable');
+          if (tbl) tbl.style.display = '';
+          refreshDataTable();
+        } else {
+          renderList(rows);
+        }
+      }
+      if (st.view === "board") renderBoard(rows);
+    }
+
+    function getCurrentPageRows() {
+      const ps = st.pageSize === 'all' ? 'all' : Number(st.pageSize || 50);
+      if (ps === 'all' || st.pageSize === 'all') return st.filtered;
+      const start = (st.currentPage - 1) * ps;
+      return st.filtered.slice(start, start + ps);
+    }
+
+    function updatePagination() {
+      const applyPagerUI = (current, totalPages, isPrevDisabled, isNextDisabled) => {
+        if (el.pageInfo) el.pageInfo.textContent = `${current} / ${totalPages}`;
+        if (el.pageInfoBottom) el.pageInfoBottom.textContent = `${current} / ${totalPages}`;
+        if (el.prevPage) el.prevPage.disabled = isPrevDisabled;
+        if (el.prevPageBottom) el.prevPageBottom.disabled = isPrevDisabled;
+        if (el.nextPage) el.nextPage.disabled = isNextDisabled;
+        if (el.nextPageBottom) el.nextPageBottom.disabled = isNextDisabled;
+      };
+
+      // Select the correct pagination source depending on view
+      if (st.view === 'list' && dtInstance) {
+        try {
+          const info = dtInstance.page.info();
+          const current = info.page + 1;
+          const totalPages = Math.max(1, info.pages);
+          st.currentPage = current;
+          applyPagerUI(current, totalPages, current <= 1, current >= totalPages);
+          return;
+        } catch (e) {
+          // fallback to custom pagination
+        }
+      }
+
+      const ps = st.pageSize === 'all' ? 'all' : Number(st.pageSize || 50);
+      const total = st.filtered.length;
+      const totalPages = ps === 'all' ? 1 : Math.max(1, Math.ceil(total / ps));
+      if (st.currentPage > totalPages) st.currentPage = totalPages;
+      applyPagerUI(st.currentPage, totalPages, st.currentPage <= 1, st.currentPage >= totalPages);
+    }
+
+    function prevPage() {
+      if (st.view === 'list' && dtInstance) {
+        try { dtInstance.page('previous').draw(false); updatePagination(); return; } catch (e) {}
+      }
+      if (st.currentPage > 1) { st.currentPage--; updatePagination(); render(); }
+    }
+
+    function nextPage() {
+      if (st.view === 'list' && dtInstance) {
+        try { dtInstance.page('next').draw(false); updatePagination(); return; } catch (e) {}
+      }
+      const ps = st.pageSize === 'all' ? 'all' : Number(st.pageSize || 50);
+      const totalPages = ps === 'all' ? 1 : Math.max(1, Math.ceil(st.filtered.length / ps));
+      if (st.currentPage < totalPages) { st.currentPage++; updatePagination(); render(); }
+    }
+
+    function setView(v) {
+      st.view = v;
+      el.viewCards.classList.toggle("active", v === "cards");
+      el.viewList.classList.toggle("active", v === "list");
+      el.viewBoard.classList.toggle("active", v === "board");
+      // Kanban no usa paginacion; tarjetas/lista si.
+      const isBoard = v === "board";
+      const topControls = document.querySelector('.results-toolbar.top-controls');
+      const bottomControls = document.querySelector('.results-toolbar.bottom-controls');
+      if (topControls) topControls.style.display = isBoard ? 'none' : '';
+      if (bottomControls) bottomControls.style.display = isBoard ? 'none' : '';
+
+      if (v === 'list' && dtInstance) {
+        syncDataTablePageSize();
+      }
+
+      render();
+      toast(`Vista ${v} activada.`);
+    }
+
+    async function openModal(code) {
+      const r = st.rows.find(x => x.CodigoExterno === code);
+      if (!r) return;
+      st.selected = code;
+      el.mdCode.textContent = r.CodigoExterno;
+      el.mdTitle.textContent = r.Nombre;
+      el.mdOrg.textContent = r.Organismo || "-";
+      el.mdProv.textContent = r.Producto || "-";
+      el.mdMonto.textContent = fmt(r.Monto);
+      el.mdPub.textContent = dateOnly(r.FechaPublicacion);
+      el.mdCloseDate.textContent = dateOnly(r.FechaCierre);
+      el.mdDias.textContent = Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} dias` : "-";
+      el.mdCat.textContent = r.TipoLicitacion || "-";
+      el.mdEstado.textContent = r.EstadoAPI || r.EstadoTrabajo || "Sin Evaluar";
+      el.mdPrio.textContent = r.Prioridad || "Media";
+      el.mdDesc.textContent = r.Descripcion || "Sin descripcion";
+      el.edVisto.value = r.Visto === "TRUE" ? "TRUE" : "FALSE";
+      el.edEstado.value = r.EstadoTrabajo || "Sin Evaluar";
+      el.edOwner.value = r.Responsable || "";
+      el.edCom.value = r.Comentario || "";
+      el.openDoc.dataset.url = buildPublicoUrlFromRow(r);
+      el.modal.classList.add("open");
+      el.modal.setAttribute("aria-hidden", "false");
+
+      // El detalle se construye desde el CSV para evitar fallos al hacer fetch de URLs HTML.
+      // La URL para "Abrir documento" ya viene saneada por buildPublicoUrlFromRow().
+    }
+
+    function closeModal() {
+      el.modal.classList.remove("open");
+      el.modal.setAttribute("aria-hidden", "true");
+      st.selected = null;
+    }
+
+    async function saveLocal() {
+      if (!st.selected) return;
+      const r = st.rows.find(x => x.CodigoExterno === st.selected);
+      if (!r) return;
+      
+      const nuevoVisto = el.edVisto.value;
+      const nuevoEstado = el.edEstado.value;
+      const nuevoResponsable = el.edOwner.value.trim();
+      const nuevoComentario = el.edCom.value.trim();
+      
+      // Actualizar datos locales
+      r.Visto = nuevoVisto;
+      r.EstadoTrabajo = nuevoEstado;
+      r.Responsable = nuevoResponsable;
+      r.Comentario = nuevoComentario;
+      
+      // Intenta sincronizar con el Web App; si no responde, conserva el cambio local.
+      try {
+        const payload = {
+          codigo_externo: st.selected,
+          visto: nuevoVisto,
+          estado_trabajo: nuevoEstado,
+          responsable: nuevoResponsable,
+          comentario: nuevoComentario,
+          version: new Date().toISOString(),
+          modificado_en: new Date().toLocaleString('es-CL')
+        };
+
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+
+        st.gestionMap[st.selected] = {
+          id: st.selected,
+          visto: nuevoVisto,
+          estadoTrabajo: nuevoEstado,
+          responsable: nuevoResponsable,
+          comentario: nuevoComentario,
+          actualizadoEn: payload.modificado_en
+        };
+        saveGestionCache(st.gestionMap);
+        toast("Cambios guardados localmente y enviados al Web App");
+      } catch (err) {
+        console.error("Error sincronizando:", err);
+        st.gestionMap[st.selected] = {
+          id: st.selected,
+          visto: nuevoVisto,
+          estadoTrabajo: nuevoEstado,
+          responsable: nuevoResponsable,
+          comentario: nuevoComentario,
+          actualizadoEn: new Date().toLocaleString('es-CL')
+        };
+        saveGestionCache(st.gestionMap);
+        toast("Cambios guardados localmente. La hoja publicada es solo lectura.");
+      }
+
+      apply();
+      closeModal();
+    }
+
+    function resetFilters() {
+      el.q.value = "";
+      el.cat.value = "";
+      el.org.value = "";
+      el.estado.value = "";
+      el.visto.value = "";
+      if (el.gestion) el.gestion.value = "";
+      if (el.producto) el.producto.value = "";
+      if (el.catGeneral) el.catGeneral.value = "";
+      if (el.fechaDesde) el.fechaDesde.value = "";
+      if (el.fechaHasta) el.fechaHasta.value = "";
+      if (el.ordenarPor) el.ordenarPor.value = "";
+      st.currentPage = 1;
+      apply();
+    }
+
+    function quick(type) {
+      if (type === "urg") {
+        el.visto.value = "";
+        st.filtered = st.rows
+          .filter(r => {
+            const d = Number(r.DiasRestantes);
+            return Number.isFinite(d) && d >= 0 && d <= 3;
+          })
+          .sort((a, b) => (Number(a.DiasRestantes) || 9999) - (Number(b.DiasRestantes) || 9999));
+        st.currentPage = 1;
+        updatePagination();
+        render();
+        kpis();
+        return;
+      }
+      if (type === "new") el.visto.value = "NUEVO";
+      if (type === "free") {
+        el.visto.value = "";
+        st.filtered = st.rows.filter(r => (r.EstadoTrabajo || "Sin Evaluar") === "Sin Evaluar");
+        st.currentPage = 1;
+        updatePagination();
+        render();
+        kpis();
+        return;
+      }
+      apply();
+    }
+
+    async function triggerAPISync() {
+      try {
+        el.mUpd.textContent = "Actualizado: consultando API...";
+        toast("Buscando nuevas licitaciones en la API...");
+        
+        const response = await fetch(APPS_SCRIPT_URL + "?action=updateLicitaciones", {
+          method: "GET"
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          el.mUpd.textContent = `Actualizado: ${result.count} nuevas licitaciones`;
+          toast(`API sincronizada: +${result.count} nuevos registros`);
+          // Espera un segundo antes de recargar el CSV
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } else {
+          toast("API: No hay nuevas licitaciones");
+        }
+      } catch (err) {
+        console.error("Error sincronizando API:", err);
+        toast("Error al consultar API (continuando con recarga local)");
+      }
+      
+      // Luego recarga el CSV actualizado
+      loadCsv();
+    }
+
+    function loadCsv() {
+      el.mUpd.textContent = "Actualizado: cargando datos...";
+
+      loadPublishedSheetRows(CSV_URL)
+        .then(rows => {
+          const parsed = rows.map(normalizeRow).filter(r => r.CodigoExterno);
+          updateData(parsed);
+          syncGestionData();
+          toast(`CSV cargado: ${parsed.length} registros.`);
+        })
+        .catch(() => {
+          st.rows = [];
+          st.filtered = [];
+          render();
+          kpis();
+          el.mUpd.textContent = "Actualizado: error al cargar";
+          toast("No se pudo cargar la hoja publicada.");
+        });
+    }
+
+    function init() {
+      const savedTheme = localStorage.getItem("cm-theme");
+      const systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      applyTheme(savedTheme || (systemDark ? "dark" : "light"));
+      loadCsv();
+    }
+    // pagination state defaults
+    st.currentPage = 1;
+    st.pageSize = '10';
+    syncSidebarLayout();
+    if (el.pageSizeBottom) el.pageSizeBottom.value = st.pageSize;
+
+    el.q.addEventListener("input", applyDebounced);
+    el.cat.addEventListener("change", applyDebounced);
+    el.org.addEventListener("change", applyDebounced);
+    el.estado.addEventListener("change", applyDebounced);
+    el.visto.addEventListener("change", applyDebounced);
+    if (el.gestion) el.gestion.addEventListener("change", applyDebounced);
+    if (el.producto) el.producto.addEventListener("change", applyDebounced);
+    if (el.catGeneral) el.catGeneral.addEventListener("change", applyDebounced);
+    if (el.fechaDesde) el.fechaDesde.addEventListener("change", applyDebounced);
+    if (el.fechaHasta) el.fechaHasta.addEventListener("change", applyDebounced);
+    if (el.ordenarPor) el.ordenarPor.addEventListener("change", applyDebounced);
+    if (el.pageSize) el.pageSize.addEventListener("change", e => {
+      st.pageSize = e.target.value;
+      if (el.pageSizeBottom) el.pageSizeBottom.value = st.pageSize;
+      st.currentPage = 1;
+      updatePagination();
+      render();
+    });
+    if (el.pageSizeBottom) el.pageSizeBottom.addEventListener("change", e => {
+      st.pageSize = e.target.value;
+      if (el.pageSize) el.pageSize.value = st.pageSize;
+      st.currentPage = 1;
+      updatePagination();
+      render();
+    });
+
+    if (el.prevPage) el.prevPage.addEventListener("click", prevPage);
+    if (el.nextPage) el.nextPage.addEventListener("click", nextPage);
+    if (el.prevPageBottom) el.prevPageBottom.addEventListener("click", prevPage);
+    if (el.nextPageBottom) el.nextPageBottom.addEventListener("click", nextPage);
+
+    if (el.quickUrg) el.quickUrg.addEventListener("click", () => quick("urg"));
+    if (el.quickNew) el.quickNew.addEventListener("click", () => quick("new"));
+    if (el.quickFree) el.quickFree.addEventListener("click", () => quick("free"));
+    if (el.reset) el.reset.addEventListener("click", resetFilters);
+
+    if (el.sidebarToggle) el.sidebarToggle.addEventListener("click", toggleSidebar);
+    if (el.sidebarClose) el.sidebarClose.addEventListener("click", closeSidebar);
+    if (el.sidebarBackdrop) el.sidebarBackdrop.addEventListener("click", closeSidebar);
+    window.addEventListener("resize", syncSidebarLayout);
+    if (el.scrollTopBtn) el.scrollTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    if (el.scrollBottomBtn) el.scrollBottomBtn.addEventListener("click", () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" }));
+
+    if (el.viewCards) el.viewCards.addEventListener("click", () => setView("cards"));
+    if (el.viewList) el.viewList.addEventListener("click", () => setView("list"));
+    if (el.viewBoard) el.viewBoard.addEventListener("click", () => setView("board"));
+    if (el.exportarExcel) el.exportarExcel.addEventListener("click", exportToExcel);
+    if (el.reload) el.reload.addEventListener("click", loadCsv);
+    if (el.themeToggle) el.themeToggle.addEventListener("click", toggleTheme);
+
+    document.addEventListener("click", e => {
+      const btn = e.target.closest("[data-a]");
+      if (!btn) return;
+      if (btn.dataset.a === "view") openModal(btn.dataset.c);
+      if (btn.dataset.a === "open") {
+        const row = st.rows.find(x => x.CodigoExterno === btn.dataset.c);
+        const url = row ? buildPublicoUrlFromRow(row) : "";
+        if (url) {
+          window.open(url, "_blank", "noopener,noreferrer");
+        } else {
+          toast("No hay URL disponible para este registro.");
+        }
+      }
+    });
+
+    el.openDoc.addEventListener("click", () => {
+      const row = st.rows.find(x => x.CodigoExterno === st.selected);
+      const url = buildPublicoUrlFromRow(row || { URLLicitacion: el.openDoc.dataset.url });
+      if (url) {
+        window.open(url, "_blank", "noopener,noreferrer");
+      } else {
+        toast("No hay documento disponible.");
+      }
+    });
+
+    el.save.addEventListener("click", saveLocal);
+    el.mdClose.addEventListener("click", closeModal);
+    el.modal.addEventListener("click", e => { if (e.target === el.modal) closeModal(); });
+
+    // Ver campos CSV -> hace fetch al CSV (simula un curl), verifica status y muestra headers
+    (function setupFieldsViewer(){
+      const fieldsModal = document.getElementById('fieldsModal');
+      const fieldsList = document.getElementById('fieldsList');
+      const viewFieldsBtn = document.getElementById('viewFields');
+      const fieldsCloseBtn = document.getElementById('fieldsClose');
+
+      async function fetchAndShowHeaders(){
+        fieldsList.textContent = 'Verificando conexiÃ³n al CSV...';
+        try {
+          // Intenta obtener el CSV (evita cache)
+          const res = await fetch(CSV_URL, { method: 'GET', cache: 'no-store' });
+          if (!res.ok) {
+            fieldsList.textContent = `Error HTTP: ${res.status} ${res.statusText}`;
+            fieldsModal.classList.add('open');
+            fieldsModal.setAttribute('aria-hidden','false');
+            return;
+          }
+          const text = await res.text();
+
+          // Usa PapaParse para extraer los headers (meta.fields)
+          const parsed = Papa.parse(text, {
+            header: true,
+            preview: 1,
+            transformHeader: header => String(header || '').replace(/^\uFEFF/, '').trim()
+          });
+
+          const fields = (parsed && parsed.meta && parsed.meta.fields) ? parsed.meta.fields : [];
+          if (fields.length === 0) {
+            // fallback: intenta leer la primera fila sin header
+            const alt = Papa.parse(text, { preview: 1, header: false });
+            const firstRow = Array.isArray(alt.data) && alt.data.length ? alt.data[0] : null;
+            if (firstRow) {
+              fieldsList.textContent = firstRow.join('\n');
+            } else {
+              fieldsList.textContent = 'No se pudieron determinar los headers.';
+            }
+          } else {
+            fieldsList.textContent = `ConexiÃ³n OK (HTTP ${res.status}).\n\n` + fields.join('\n');
+          }
+
+          // Comparar con lo que ya estÃ¡ cargado en memoria (st.rows) y avisar si difiere
+          if (st.rows && st.rows.length) {
+            const loaded = Object.keys(st.rows[0]._raw || {});
+            const onlyInFetched = fields.filter(f => !loaded.includes(f));
+            const onlyInLoaded = loaded.filter(f => !fields.includes(f));
+            const diffs = onlyInFetched.length + onlyInLoaded.length;
+            if (diffs) {
+              fieldsList.textContent += `\n\nAdvertencia: los headers en tiempo de carga difieren (${diffs} diferencias).`;
+            }
+          }
+
+          fieldsModal.classList.add('open');
+          fieldsModal.setAttribute('aria-hidden','false');
+        } catch (err) {
+          // CORS o network errores quedarÃ¡n aquÃ­
+          fieldsList.textContent = 'Error conectando al CSV: ' + (err && err.message ? err.message : String(err));
+          fieldsModal.classList.add('open');
+          fieldsModal.setAttribute('aria-hidden','false');
+        }
+      }
+
+      if (viewFieldsBtn) viewFieldsBtn.addEventListener('click', fetchAndShowHeaders);
+
+      if (fieldsCloseBtn) fieldsCloseBtn.addEventListener('click', () => {
+        fieldsModal.classList.remove('open');
+        fieldsModal.setAttribute('aria-hidden', 'true');
+      });
+
+      if (fieldsModal) fieldsModal.addEventListener('click', e => { if (e.target === fieldsModal) { fieldsModal.classList.remove('open'); fieldsModal.setAttribute('aria-hidden','true'); } });
+    })();
+
+    init();
+  </script>
+</body>
+</html>
