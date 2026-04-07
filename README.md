@@ -60,7 +60,7 @@ Responsabilidades principales:
 
 ### Sitio publicado
 
-- URL publica: https://espex-ti.github.io/Mercado-Publico/dashboard-Licitaciones.html
+- URL publica: https://espex-ti.github.io/Mercado-Publico/Dashboard_Licitaciones.html
 
 ### Fuentes CSV publicadas
 
