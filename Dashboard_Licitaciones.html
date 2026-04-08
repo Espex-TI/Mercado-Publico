@@ -2310,8 +2310,34 @@
       }
     }
 
-    function flagByDays(dias) {
-      const n = Number(dias);
+    function isLicitacionCerrada(row) {
+      const estado = normalizeSearchText(row && row.EstadoAPI);
+      if (/cerrad/.test(estado)) return true;
+
+      const n = Number(row && row.DiasRestantes);
+      if (Number.isFinite(n) && n <= 0) return true;
+
+      const cierre = dateOnly(row && row.FechaCierre);
+      if (cierre && cierre !== "-" && cierre <= todayOnly()) return true;
+
+      return false;
+    }
+
+    function getEstadoLicitacion(row) {
+      if (isLicitacionCerrada(row)) return "Cerrada";
+      return String((row && row.EstadoAPI) || "").trim() || "Publicada";
+    }
+
+    function formatDiasLicitacion(row, fallback = "-") {
+      if (isLicitacionCerrada(row)) return "Cerrada";
+      const n = Number(row && row.DiasRestantes);
+      return Number.isFinite(n) ? `${n} días` : fallback;
+    }
+
+    function flagByDays(input) {
+      const row = input && typeof input === "object" ? input : null;
+      if (row && isLicitacionCerrada(row)) return "f-nv";
+      const n = Number(row ? row.DiasRestantes : input);
       if (!Number.isFinite(n)) return "f-nv";
       if (n <= 2) return "f-u";
       if (n <= 7) return "f-new";
@@ -2324,7 +2350,7 @@
       const productos = [...new Set(st.rows.map(r => r.Producto).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
       const generales = [...new Set(st.rows.map(r => r.CategoriaGeneral).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
       const clasesTI = [...new Set(st.rows.map(r => r.ClaseTI).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
-      const estadosApi = [...new Set(st.rows.map(r => String(r.EstadoAPI || "").trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const estadosApi = [...new Set(st.rows.map(r => getEstadoLicitacion(r)).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
       el.cat.innerHTML = '<option value="">Todas</option>' + cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
       el.org.innerHTML = '<option value="">Todos</option>' + orgs.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join("");
       if (el.catGeneral) el.catGeneral.innerHTML = '<option value="">Todas</option>' + generales.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
@@ -2367,7 +2393,7 @@
         const mProd = !prod || (r.Producto === prod);
         const mCatGen = !catGen || (r.CategoriaGeneral === catGen);
         const mClaseTI = !claseTI || (r.ClaseTI === claseTI);
-        const estadoLicitacion = String(r.EstadoAPI || "").trim();
+        const estadoLicitacion = getEstadoLicitacion(r);
         const mEst = !est || estadoLicitacion === est;
         const estadoGestion = String(r.EstadoTrabajo || "Sin Evaluar").trim() || "Sin Evaluar";
         const mGestion = !gestion || estadoGestion === gestion;
@@ -2533,7 +2559,7 @@
             <div class="head-row">
               <span class="code">${esc(r.CodigoExterno)}</span>
               <div class="flags">
-                <span class="flag ${flagByDays(r.DiasRestantes)}">${Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} días` : "sin cierre"}</span>
+                <span class="flag ${flagByDays(r)}">${formatDiasLicitacion(r, "sin cierre")}</span>
                 ${isNew(r) ? '<span class="flag f-new">NUEVO</span>' : ""}
                 <span class="flag ${visto ? "f-v" : "f-nv"}">${visto ? "VISTO" : "NO VISTO"}</span>
               </div>
@@ -2573,7 +2599,7 @@
             </div>
             <span>${esc(r.TipoLicitacion)}</span>
             <span>${fmt(r.Monto)}</span>
-            <span>${Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} días` : "-"}</span>
+            <span>${formatDiasLicitacion(r, "-")}</span>
             <span><span class="status ${statusClass(r.EstadoTrabajo)}">${esc(r.EstadoTrabajo)}</span></span>
             <div class="actions">
               <button class="link-btn" type="button" data-a="view" data-c="${esc(r.CodigoExterno)}">Ver</button>
@@ -2592,7 +2618,7 @@
         const name = `<strong>${esc(r.Nombre)}</strong><br/><small style="color:var(--muted);">${esc(r.CodigoExterno)} - ${esc(r.Organismo)}</small>`;
         const tipo = esc(r.TipoLicitacion);
         const monto = fmt(r.Monto);
-        const dias = Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} días` : "-";
+        const dias = formatDiasLicitacion(r, "-");
         const estado = `<span class="status ${statusClass(r.EstadoTrabajo)}">${esc(r.EstadoTrabajo)}</span>`;
         const actions = `<button class="link-btn" type="button" data-a="view" data-c="${esc(r.CodigoExterno)}">Ver</button> <button class="link-btn" type="button" data-a="open" data-c="${esc(r.CodigoExterno)}">Abrir</button>`;
         return [name, tipo, monto, dias, estado, actions];
@@ -2803,9 +2829,9 @@
       el.mdMonto.textContent = fmt(r.Monto);
       el.mdPub.textContent = dateOnly(r.FechaPublicacion);
       el.mdCloseDate.textContent = dateOnly(r.FechaCierre);
-      el.mdDias.textContent = Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} días` : "-";
+      el.mdDias.textContent = formatDiasLicitacion(r, "-");
       el.mdCat.textContent = r.TipoLicitacion || "-";
-      el.mdEstado.textContent = r.EstadoAPI || normalizeGestionState(r.EstadoTrabajo) || "Sin Evaluar";
+      el.mdEstado.textContent = getEstadoLicitacion(r);
       el.mdPrio.textContent = r.Prioridad || "Media";
       el.mdDesc.textContent = r.Descripcion || "Sin descripción";
       el.edVisto.value = r.Visto === "TRUE" ? "TRUE" : "FALSE";
@@ -2916,7 +2942,7 @@
         st.filtered = st.rows
           .filter(r => {
             const d = Number(r.DiasRestantes);
-            return Number.isFinite(d) && d >= 0 && d <= 3;
+            return Number.isFinite(d) && d > 0 && d <= 3;
           })
           .sort((a, b) => (Number(a.DiasRestantes) || 9999) - (Number(b.DiasRestantes) || 9999));
         st.currentPage = 1;
