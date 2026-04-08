@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -252,6 +252,45 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
+    }
+
+    .search-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .search-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      background: var(--chip);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: .72rem;
+      font-weight: 700;
+      color: #38507f;
+    }
+
+    .search-tag button {
+      width: auto;
+      min-width: 0;
+      height: auto;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      line-height: 1;
+    }
+
+    .search-help {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: .72rem;
+      line-height: 1.35;
     }
 
     .view-actions .btn {
@@ -1157,7 +1196,7 @@
                     <span>Panel de licitaciones</span>
                   </div>
                 </div>
-                <button id="sidebarClose" class="btn btn-sm btn-light sidebar-close-btn" type="button" aria-label="Cerrar menÃº"><i class="bi bi-x-lg"></i></button>
+                <button id="sidebarClose" class="btn btn-sm btn-light sidebar-close-btn" type="button" aria-label="Cerrar menú"><i class="bi bi-x-lg"></i></button>
               </div>
               <button id="themeToggle" class="btn btn-sm btn-outline-light w-100 mb-3"><i class="bi bi-moon-stars"></i> Modo Oscuro</button>
               <form id="sidebar-filtros" class="mb-4">
@@ -1165,11 +1204,14 @@
                   <label for="q">Buscar</label>
                   <div class="input-group">
                     <input id="q" type="text" class="form-control" placeholder="Buscar..." />
+                    <button class="btn btn-outline-primary" id="searchAdd" title="Agregar término" type="button"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
                     <button class="btn btn-outline-secondary" id="reset" title="Limpiar filtros" type="button"><i class="bi bi-x-lg me-1"></i>Limpiar filtros</button>
                   </div>
+                  <div id="searchTokens" class="search-tags" aria-live="polite"></div>
+                  <span class="search-help">Escribe un término y presiona Enter o Agregar. Los términos se combinan simultáneamente.</span>
                 </div>
                 <div class="field mb-2">
-                  <label for="cat">CategorÃ­a</label>
+                  <label for="cat">Categoría</label>
                   <select id="cat" class="form-select"></select>
                 </div>
                 <div class="field mb-2">
@@ -1185,7 +1227,7 @@
                   <select id="visto" class="form-select"></select>
                 </div>
                 <div class="field mb-2">
-                  <label for="gestion">GestiÃ³n</label>
+                  <label for="gestion">Gestión</label>
                   <select id="gestion" class="form-select">
                     <option value="">Todas</option>
                     <option value="Sin Evaluar">Sin Evaluar</option>
@@ -1229,7 +1271,7 @@
               </div>
             </div>
             <div class="chips d-flex flex-wrap gap-2 justify-content-end">
-              <span class="chip"><i class="bi bi-lightning-charge text-warning me-1"></i>RÃ¡pido</span>
+              <span class="chip"><i class="bi bi-lightning-charge text-warning me-1"></i>Rápido</span>
               <span class="chip"><i class="bi bi-shield-check text-success me-1"></i>Seguro</span>
               <span class="chip"><i class="bi bi-cloud-arrow-down text-primary me-1"></i>Actualizable</span>
             </div>
@@ -1271,8 +1313,8 @@
             <label for="ordenarPor" class="sort-label">Ordenar</label>
             <select id="ordenarPor" class="form-select form-select-sm">
               <option value="">Predeterminado</option>
-              <option value="dias">DÃ­as (menor a mayor)</option>
-              <option value="dias_desc">DÃ­as (mayor a menor)</option>
+              <option value="dias">Días (menor a mayor)</option>
+              <option value="dias_desc">Días (mayor a menor)</option>
               <option value="monto">Monto (mayor a menor)</option>
               <option value="monto_asc">Monto (menor a mayor)</option>
               <option value="nombre">Nombre (A-Z)</option>
@@ -1307,7 +1349,7 @@
                   <th>Nombre</th>
                   <th>Tipo</th>
                   <th>Monto</th>
-                  <th>DÃ­as</th>
+                  <th>Días</th>
                   <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
@@ -1438,9 +1480,9 @@
   <script>
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTFm45Y6dS_yQGBtyYW0Zql9mxTaasWeTk0T_IxU9Esr0i-yGhGmHygxDb3psjrVJTVnEimAAAhQoMd/pub?gid=767150855&single=true&output=csv";
     const GESTION_PUBLIC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTFm45Y6dS_yQGBtyYW0Zql9mxTaasWeTk0T_IxU9Esr0i-yGhGmHygxDb3psjrVJTVnEimAAAhQoMd/pub?gid=1084871879&single=true&output=csv";
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCXFV9J1ZY2A5CPejzHur4KaVVP96z4G9G9YQRUAjXhhOHhQ5LZG6JxJA3qn5gA_Q67w/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6th-WROi9ihiKtOKHCMOVrtWnRPumEqgAq8tB0ExwgePeFq2flr8FnUOZ3N-fgTgI/exec";
 
-    const st = { rows: [], filtered: [], view: "cards", selected: null, currentPage: 1, pageSize: '10', gestionMap: {} };
+    const st = { rows: [], filtered: [], view: "cards", selected: null, currentPage: 1, pageSize: '10', gestionMap: {}, searchTerms: [] };
     const GESTION_CACHE_KEY = "cm-gestion-cache";
 
     const el = {
@@ -1448,6 +1490,8 @@
       cat: document.getElementById("cat"),
       org: document.getElementById("org"),
       producto: document.getElementById("producto"),
+      searchAdd: document.getElementById("searchAdd"),
+      searchTokens: document.getElementById("searchTokens"),
       estado: document.getElementById("estado"),
       visto: document.getElementById("visto"),
       gestion: document.getElementById("gestion"),
@@ -1534,11 +1578,11 @@
       out._raw = Object.assign({}, raw);
 
       // Provide convenient aliases only if they are missing, do NOT remove or rename original headers
-      if (!out.CodigoExterno) out.CodigoExterno = raw['ID Licitacion'] || raw['ID LicitaciÃ³n'] || raw.CodigoExterno || raw['Codigo Externo'] || "";
+      if (!out.CodigoExterno) out.CodigoExterno = raw['ID Licitacion'] || raw['ID Licitación'] || raw['ID LicitaciÃ³n'] || raw.CodigoExterno || raw['Codigo Externo'] || "";
       if (!out.Nombre) out.Nombre = raw.Nombre || raw['Nombre'] || "";
       out.Monto = toNumber(raw['Monto Estimado'] || raw.Monto || raw['Monto'] || 0);
       if (!out.FechaCierre) out.FechaCierre = raw['Fecha Cierre'] || raw.FechaCierre || "";
-      if (!out.Descripcion) out.Descripcion = raw.Descripcion || raw['Descripcion'] || raw['DescripciÃ³n'] || "";
+      if (!out.Descripcion) out.Descripcion = raw.Descripcion || raw['Descripcion'] || raw['Descripción'] || raw['DescripciÃ³n'] || "";
       if (!out.TipoLicitacion) out.TipoLicitacion = raw['Tipo Licitacion'] || raw.Categoria || raw['Codigo Tipo'] || "Sin tipo";
       if (!out.Organismo) out.Organismo = raw['Nombre Organismo'] || raw.Organismo || "";
       if (!out.EstadoAPI) out.EstadoAPI = raw.Estado || raw['Estado'] || "";
@@ -1550,7 +1594,13 @@
       if (!out.EstadoTrabajo) out.EstadoTrabajo = raw.EstadoTrabajo || raw['EstadoTrabajo'] || raw['Estado Trabajo'] || "Sin Evaluar";
       if (!out.Producto) out.Producto = raw['Nombre Producto (1er Item)'] || raw.Producto || raw.Proveedor || "";
       // compute general classification and subcategory
-      const cls = classifyProduct(out.Producto || out.TipoLicitacion || out.Organismo || "");
+      const cls = classifyProduct({
+        Nombre: out.Nombre,
+        Producto: out.Producto,
+        Descripcion: out.Descripcion,
+        TipoLicitacion: out.TipoLicitacion,
+        Organismo: out.Organismo
+      });
       out.CategoriaGeneral = cls.general;
       out.Subcategoria = cls.sub;
       if (!out.Responsable) out.Responsable = raw.Responsable || raw['Nombre Usuario'] || "";
@@ -1618,6 +1668,110 @@
     // Debounced version of apply() (apply is hoisted, so safe to reference here)
     const applyDebounced = debounce(() => apply(), 180);
 
+    function normalizeSearchText(value) {
+      return String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/Ã¡/g, "a")
+        .replace(/Ã©/g, "e")
+        .replace(/Ã­/g, "i")
+        .replace(/Ã³/g, "o")
+        .replace(/Ãº/g, "u")
+        .replace(/Ã±/g, "n")
+        .replace(/Ã¼/g, "u")
+        .replace(/Ã/g, "a")
+        .replace(/Ã‰/g, "e")
+        .replace(/Ã/g, "i")
+        .replace(/Ã“/g, "o")
+        .replace(/Ãš/g, "u")
+        .replace(/Ã‘/g, "n")
+        .replace(/Ãœ/g, "u")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function buildSearchCorpus(row) {
+      return normalizeSearchText([
+        row && row.Nombre,
+        row && row.CodigoExterno,
+        row && row.Organismo,
+        row && row.Producto,
+        row && row.Descripcion,
+        row && row.TipoLicitacion,
+        row && row.CategoriaGeneral,
+        row && row.Subcategoria,
+        row && row.EstadoAPI,
+        row && row.EstadoTrabajo
+      ].filter(Boolean).join(" "));
+    }
+
+    function renderSearchTerms() {
+      if (!el.searchTokens) return;
+
+      if (!st.searchTerms.length) {
+        el.searchTokens.innerHTML = "";
+        return;
+      }
+
+      el.searchTokens.innerHTML = st.searchTerms.map(term => `
+        <span class="search-tag">
+          <span>${esc(term.raw)}</span>
+          <button type="button" data-search-remove="${esc(term.norm)}" aria-label="Quitar término ${esc(term.raw)}"><i class="bi bi-x-lg"></i></button>
+        </span>
+      `).join("");
+    }
+
+    function addSearchTerm(value) {
+      const raw = String(value || "").trim();
+      const parts = raw.split(/[;,\n]+/).map(part => part.trim()).filter(Boolean);
+      let added = false;
+
+      for (const part of parts) {
+        const norm = normalizeSearchText(part);
+        if (!norm) continue;
+        if (st.searchTerms.some(term => term.norm === norm)) continue;
+        if (st.searchTerms.length >= 8) {
+          toast("Puedes agregar hasta 8 términos de búsqueda.");
+          break;
+        }
+        st.searchTerms.push({ raw: part, norm: norm });
+        added = true;
+      }
+
+      if (added && el.q) el.q.value = "";
+      renderSearchTerms();
+      apply();
+    }
+
+    function removeSearchTerm(norm) {
+      st.searchTerms = st.searchTerms.filter(term => term.norm !== norm);
+      renderSearchTerms();
+      apply();
+    }
+
+    function clearSearchTerms() {
+      st.searchTerms = [];
+      renderSearchTerms();
+    }
+
+    function handleSearchKeydown(event) {
+      if (!el.q) return;
+
+      if (event.key === "Enter" || event.key === "," || event.key === ";") {
+        event.preventDefault();
+        addSearchTerm(el.q.value);
+        return;
+      }
+
+      if (event.key === "Backspace" && !String(el.q.value || "").trim() && st.searchTerms.length) {
+        event.preventDefault();
+        st.searchTerms.pop();
+        renderSearchTerms();
+        apply();
+      }
+    }
+
     // Centralized data update to avoid duplicated sequences of fillFilters/apply/render
     function updateData(rows) {
       st.rows = rows;
@@ -1630,28 +1784,110 @@
       kpis();
     }
 
-    function classifyProduct(text) {
-      const s = String(text || "").toLowerCase();
-      const mapping = [
-        { general: 'Salud', subs: [['Medic', /medic|hospital|salud|clÃ­nic|enfermer/], ['Servicios mÃ©dicos', /servicio.*mÃ©dic|prestaciones mÃ©dicas/]] },
-        { general: 'ConstrucciÃ³n', subs: [['Obras', /obra|construcc|pavi|obra/], ['Materiales', /material|grava|cemento|hormigÃ³n|moldaje/]] },
-        { general: 'EducaciÃ³n', subs: [['CapacitaciÃ³n', /capacitaci|escuela|docent/]] },
-        { general: 'Servicios', subs: [['Limpieza', /aseo|limpiez/], ['Seguridad', /guardia|segurid/], ['Transporte', /transporte|autobÃºs|moviliz/]] },
-        { general: 'TecnologÃ­a', subs: [['Software', /soft|software|sistema|plataforma/], ['Equipamiento', /equipo|servidor|hosting/]] },
-        { general: 'Suministros', subs: [['Insumos', /insumo|insumos|suministr|reactiv|material auxiliar/]] },
-        { general: 'Alimentos', subs: [['Catering', /catering|desayun|banquet/]] }
+    function classifyProduct(input) {
+      const source = typeof input === "string" ? { texto: input } : (input || {});
+      const s = normalizeSearchText([
+        source.texto,
+        source.Nombre,
+        source.Producto,
+        source.Descripcion,
+        source.TipoLicitacion,
+        source.Organismo
+      ].filter(Boolean).join(" "));
+
+      const groups = [
+        {
+          general: "Tecnología",
+          subs: [
+            { sub: "Software", rx: /\b(software|licencia|licenciamiento|plataforma|sistema|aplicacion|app|web|portal|moodle|erp|crm|sga)\b/, w: 6 },
+            { sub: "Infraestructura", rx: /\b(servidor|cloud|nube|hosting|datacenter|virtualizacion|backup|storage|respaldo)\b/, w: 5 },
+            { sub: "Redes y Seguridad", rx: /\b(router|switch|firewall|vpn|redes?|wifi|ciberseguridad|antivirus)\b/, w: 5 },
+            { sub: "Equipamiento TI", rx: /\b(computador|notebook|laptop|workstation|tablet|impresora|monitor|escaner|perifericos?)\b/, w: 3 },
+            { sub: "Servicios TI", rx: /\b(desarrollo|implementacion|soporte informatico|mantencion informatica|integracion|consultoria ti)\b/, w: 4 },
+            { sub: "Hardware", rx: /\b(hardware|equipo informatico|infraestructura tecnologica)\b/, w: 4 }
+          ]
+        },
+        {
+          general: "Salud",
+          subs: [
+            { sub: "Hospital y Clínica", rx: /\b(hospital|salud|clinica|clinico|consultorio|cesfam|sapu|odontologia|odontologico|farmacia|laboratorio|anestesia|pabellon)\b/, w: 6 },
+            { sub: "Insumos Médicos", rx: /\b(insumo|insumos|medic|quirurg|reactivo|material medico|gases medicinales|esteriliz|instrumental)\b/, w: 5 },
+            { sub: "Equipamiento Médico", rx: /\b(equipo medico|equipo clinico|biomedic|ecografo|resonancia|radiologia|anestesia|monitor multiparametro|desfibrilador)\b/, w: 5 },
+            { sub: "Servicios Médicos", rx: /\b(servicio medico|prestaciones medicas|atencion medica|examenes|procedimientos)\b/, w: 4 }
+          ]
+        },
+        {
+          general: "Servicios",
+          subs: [
+            { sub: "Mantenimiento", rx: /\b(mantenimiento|mantencion|reparacion|conservacion)\b/, w: 4 },
+            { sub: "Limpieza", rx: /\b(aseo|limpieza|sanitiz|desinfeccion)\b/, w: 4 },
+            { sub: "Seguridad", rx: /\b(guardia|seguridad|vigilancia)\b/, w: 4 },
+            { sub: "Transporte", rx: /\b(transporte|moviliz|autobus|bus|traslado)\b/, w: 4 }
+          ]
+        },
+        {
+          general: "Construcción",
+          subs: [
+            { sub: "Obras", rx: /\b(obra|construccion|edificacion|pavimento|pavimentacion|reparacion infraestructura)\b/, w: 5 },
+            { sub: "Materiales", rx: /\b(material|cemento|hormigon|grava|moldaje|acero|ladrillo|tuberia|fierro)\b/, w: 4 }
+          ]
+        },
+        {
+          general: "Educación",
+          subs: [
+            { sub: "Capacitación", rx: /\b(capacitacion|educacion|escuela|docente|aula|aprendizaje)\b/, w: 4 }
+          ]
+        },
+        {
+          general: "Alimentos",
+          subs: [
+            { sub: "Catering", rx: /\b(catering|desayuno|almuerzo|banquete|alimentos|racion)\b/, w: 4 }
+          ]
+        },
+        {
+          general: "Suministros",
+          subs: [
+            { sub: "Insumos", rx: /\b(insumo|insumos|suministro|suministros|repuesto|repuestos|consumible|consumibles|material auxiliar)\b/, w: 4 }
+          ]
+        }
       ];
 
-      for (const m of mapping) {
-        for (const sub of m.subs) {
-          if (sub[1].test(s)) return { general: m.general, sub: sub[0] };
+      const scored = groups.map(group => {
+        let score = 0;
+        let bestSub = group.subs[0] ? group.subs[0].sub : "General";
+        let bestSubScore = -1;
+
+        for (const sub of group.subs) {
+          const hits = (s.match(new RegExp(sub.rx.source, "g")) || []).length;
+          if (!hits) continue;
+          const subScore = hits * sub.w;
+          score += subScore;
+          if (subScore > bestSubScore) {
+            bestSubScore = subScore;
+            bestSub = sub.sub;
+          }
         }
+
+        return { general: group.general, score: score, sub: bestSub };
+      });
+
+      const tech = scored.find(item => item.general === "Tecnología") || { score: 0, sub: "General" };
+      const health = scored.find(item => item.general === "Salud") || { score: 0, sub: "General" };
+
+      if (tech.score > 0 && tech.score >= health.score + 1) {
+        return { general: "Tecnología", sub: tech.sub || "General" };
       }
-      // fallback heuristics
-      if (/servicio|contrataciÃ³n|contrato/.test(s)) return { general: 'Servicios', sub: 'General' };
-      if (/mantenimiento|mantenciÃ³n|mantenim/.test(s)) return { general: 'Servicios', sub: 'Mantenimiento' };
-      if (/pieza|pieza|repuesto|insumo|material/.test(s)) return { general: 'Suministros', sub: 'General' };
-      return { general: 'Otros', sub: 'Otros' };
+
+      const ordered = scored.sort((a, b) => b.score - a.score);
+      const winner = ordered[0] || { general: "Otros", sub: "Otros", score: 0 };
+
+      if (winner.score > 0) {
+        return { general: winner.general, sub: winner.sub || "General" };
+      }
+
+      if (/\b(servicio|contrato|contratacion)\b/.test(s)) return { general: "Servicios", sub: "General" };
+      if (/\b(mantenimiento|mantencion|mantenim)\b/.test(s)) return { general: "Servicios", sub: "Mantenimiento" };
+      return { general: "Otros", sub: "Otros" };
     }
 
     function toast(msg) {
@@ -2008,7 +2244,9 @@
     }
 
     function apply() {
-      const q = (el.q && el.q.value ? String(el.q.value).trim().toLowerCase() : "");
+      const q = normalizeSearchText(el.q && el.q.value ? el.q.value : "");
+      const searchTerms = st.searchTerms.map(term => term.norm);
+      if (q) searchTerms.push(q);
       const cat = (el.cat && el.cat.value) ? el.cat.value : "";
       const org = (el.org && el.org.value) ? el.org.value : "";
       const prod = (el.producto && el.producto.value) ? el.producto.value : "";
@@ -2021,8 +2259,8 @@
       const ordenarPor = (el.ordenarPor && el.ordenarPor.value) ? el.ordenarPor.value : "";
 
       st.filtered = st.rows.filter(r => {
-        const text = [r.Nombre, r.CodigoExterno, r.Organismo, r.Producto, r.Descripcion, r.TipoLicitacion].join(" ").toLowerCase();
-        const mQ = !q || text.includes(q);
+        const text = buildSearchCorpus(r);
+        const mQ = !searchTerms.length || searchTerms.every(term => text.includes(term));
         const mCat = !cat || r.TipoLicitacion === cat;
         const mOrg = !org || r.Organismo === org;
         const mProd = !prod || (r.Producto === prod);
@@ -2264,11 +2502,11 @@
       const $tbl = $('#dtTable');
       $tbl.show();
       const data = buildTableData(st.filtered);
-      const pagingEnabled = st.pageSize !== 'all';
 
       // If dtInstance exists, update data in place (faster)
       if (dtInstance) {
         try {
+          dtInstance.search("");
           dtInstance.clear();
           dtInstance.rows.add(data);
           dtInstance.draw(false);
@@ -2299,10 +2537,6 @@
       // keep top/bottom pager in sync when DataTable changes page/order/search
       $tbl.off('draw.dt.pagerSync').on('draw.dt.pagerSync', () => updatePagination());
 
-      // bind external search box to DataTable search
-      if (el.q) {
-        $(el.q).off('input.dtsearch').on('input.dtsearch', function() { if (dtInstance) dtInstance.search(this.value).draw(); });
-      }
     }
 
     function refreshDataTable() {
@@ -2554,7 +2788,7 @@
     }
 
     function resetFilters() {
-      el.q.value = "";
+      if (el.q) el.q.value = "";
       el.cat.value = "";
       el.org.value = "";
       el.estado.value = "";
@@ -2565,6 +2799,10 @@
       if (el.fechaDesde) el.fechaDesde.value = "";
       if (el.fechaHasta) el.fechaHasta.value = "";
       if (el.ordenarPor) el.ordenarPor.value = "";
+      clearSearchTerms();
+      if (dtInstance) {
+        try { dtInstance.search("").draw(false); } catch (_) {}
+      }
       st.currentPage = 1;
       apply();
     }
