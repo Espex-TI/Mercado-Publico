@@ -1190,7 +1190,7 @@
 </head>
 <body>
 
-  <button id="sidebarToggle" class="btn btn-light btn-sm sidebar-toggle" type="button" aria-label="Abrir menú lateral"><i class="bi bi-list"></i></button>
+  <button id="sidebarToggle" class="btn btn-light btn-sm sidebar-toggle" type="button" aria-label="Abrir men� lateral"><i class="bi bi-list"></i></button>
 
   <main class="container-fluid py-3">
     <div class="row g-4 dashboard-shell">
@@ -1206,7 +1206,7 @@
                     <span>Panel de licitaciones</span>
                   </div>
                 </div>
-                <button id="sidebarClose" class="btn btn-sm btn-light sidebar-close-btn" type="button" aria-label="Cerrar menú"><i class="bi bi-x-lg"></i></button>
+                <button id="sidebarClose" class="btn btn-sm btn-light sidebar-close-btn" type="button" aria-label="Cerrar men�"><i class="bi bi-x-lg"></i></button>
               </div>
               <button id="themeToggle" class="btn btn-sm btn-outline-light w-100 mb-3"><i class="bi bi-moon-stars"></i> Modo Oscuro</button>
               <form id="sidebar-filtros" class="mb-4">
@@ -1214,14 +1214,14 @@
                   <label for="q">Buscar</label>
                   <div class="input-group">
                     <input id="q" type="text" class="form-control" placeholder="Buscar..." />
-                    <button class="btn btn-outline-primary" id="searchAdd" title="Agregar término" type="button"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+                    <button class="btn btn-outline-primary" id="searchAdd" title="Agregar t�rmino" type="button"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
                     <button class="btn btn-outline-secondary" id="reset" title="Limpiar filtros" type="button"><i class="bi bi-x-lg me-1"></i>Limpiar filtros</button>
                   </div>
                   <div id="searchTokens" class="search-tags" aria-live="polite"></div>
-                  <span class="search-help">Escribe un término y presiona Enter o Agregar. Los términos se combinan simultáneamente.</span>
+                  <span class="search-help">Escribe un t�rmino y presiona Enter o Agregar. Los t�rminos se combinan simult�neamente.</span>
                 </div>
                 <div class="field mb-2">
-                  <label for="cat">Categoría</label>
+                  <label for="cat">Categor�a</label>
                   <select id="cat" class="form-select"></select>
                 </div>
                 <div class="field mb-2">
@@ -1237,7 +1237,7 @@
                   <select id="visto" class="form-select"></select>
                 </div>
                 <div class="field mb-2">
-                  <label for="gestion">Gestión</label>
+                  <label for="gestion">Gesti�n</label>
                   <select id="gestion" class="form-select">
                     <option value="">Todas</option>
                     <option value="Sin Evaluar">Sin Evaluar</option>
@@ -1250,6 +1250,10 @@
                 <div class="field mb-2">
                   <label for="catGeneral">Clasificacion</label>
                   <select id="catGeneral" class="form-select"></select>
+                </div>
+                <div class="field mb-2">
+                  <label for="claseTI">Clasificacion TI</label>
+                  <select id="claseTI" class="form-select"></select>
                 </div>
                 <div class="field mb-2">
                   <label for="producto">Producto</label>
@@ -1282,7 +1286,7 @@
               </div>
             </div>
             <div class="chips d-flex flex-wrap gap-2 justify-content-end">
-              <span class="chip"><i class="bi bi-lightning-charge text-warning me-1"></i>Rápido</span>
+              <span class="chip"><i class="bi bi-lightning-charge text-warning me-1"></i>R�pido</span>
               <span class="chip"><i class="bi bi-shield-check text-success me-1"></i>Seguro</span>
               <span class="chip"><i class="bi bi-cloud-arrow-down text-primary me-1"></i>Actualizable</span>
             </div>
@@ -1324,8 +1328,8 @@
             <label for="ordenarPor" class="sort-label">Ordenar</label>
             <select id="ordenarPor" class="form-select form-select-sm">
               <option value="">Predeterminado</option>
-              <option value="dias">Días (menor a mayor)</option>
-              <option value="dias_desc">Días (mayor a menor)</option>
+              <option value="dias">D�as (menor a mayor)</option>
+              <option value="dias_desc">D�as (mayor a menor)</option>
               <option value="monto">Monto (mayor a menor)</option>
               <option value="monto_asc">Monto (menor a mayor)</option>
               <option value="nombre">Nombre (A-Z)</option>
@@ -1360,7 +1364,7 @@
                   <th>Nombre</th>
                   <th>Tipo</th>
                   <th>Monto</th>
-                  <th>Días</th>
+                  <th>D�as</th>
                   <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
@@ -1388,7 +1392,7 @@
   </main>
 
   <div id="sidebarBackdrop" class="sidebar-backdrop" hidden></div>
-  <div class="scroll-nav" aria-label="Navegación rápida">
+  <div class="scroll-nav" aria-label="Navegaci�n r�pida">
     <button id="scrollTopBtn" class="btn btn-primary btn-sm" type="button" aria-label="Ir al inicio"><i class="bi bi-arrow-up"></i></button>
     <button id="scrollBottomBtn" class="btn btn-primary btn-sm" type="button" aria-label="Ir al final"><i class="bi bi-arrow-down"></i></button>
   </div>
@@ -1407,21 +1411,21 @@
         <div class="col-md-4"><div class="box"><b>Organismo</b><span id="mdOrg">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Producto</b><span id="mdProv">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Monto</b><span id="mdMonto">-</span></div></div>
-        <div class="col-md-4"><div class="box"><b>Publicación</b><span id="mdPub">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Publicaci�n</b><span id="mdPub">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Cierre</b><span id="mdCloseDate">-</span></div></div>
-        <div class="col-md-4"><div class="box"><b>Días</b><span id="mdDias">-</span></div></div>
-        <div class="col-md-4"><div class="box"><b>Tipo Licitación</b><span id="mdCat">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>D�as</b><span id="mdDias">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Tipo Licitaci�n</b><span id="mdCat">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Estado</b><span id="mdEstado">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Prioridad</b><span id="mdPrio">-</span></div></div>
       </div>
 
       <div class="mb-3">
-        <b class="text-secondary small">Descripción</b>
+        <b class="text-secondary small">Descripci�n</b>
         <div id="mdDesc" class="full"></div>
       </div>
 
       <section class="edit">
-        <strong class="text-primary mb-2">Gestión</strong>
+        <strong class="text-primary mb-2">Gesti�n</strong>
         <div class="row g-2">
           <div class="col-md-4">
             <div class="field">
@@ -1472,7 +1476,7 @@
         <button id="fieldsClose" class="close" type="button">Cerrar</button>
       </header>
       <div id="fieldsList" class="full" style="white-space:pre-wrap; max-height:60vh; overflow:auto;">
-        <!-- Lista de campos se llenará dinámicamente -->
+        <!-- Lista de campos se llenar� din�micamente -->
       </div>
     </article>
   </section>
@@ -1486,7 +1490,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
-  <!-- Bootstrap debe ir después de jQuery si usas plugins que dependen de él -->
+  <!-- Bootstrap debe ir despu�s de jQuery si usas plugins que dependen de �l -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
@@ -1565,6 +1569,7 @@
       fechaDesde: document.getElementById("fechaDesde"),
       fechaHasta: document.getElementById("fechaHasta"),
       catGeneral: document.getElementById("catGeneral"),
+      claseTI: document.getElementById("claseTI"),
       ordenarPor: document.getElementById("ordenarPor"),
       exportarExcel: document.getElementById("exportarExcel")
     };
@@ -1590,11 +1595,11 @@
       out._raw = Object.assign({}, raw);
 
       // Provide convenient aliases only if they are missing, do NOT remove or rename original headers
-      if (!out.CodigoExterno) out.CodigoExterno = raw['ID Licitacion'] || raw['ID Licitación'] || raw['ID LicitaciÃ³n'] || raw.CodigoExterno || raw['Codigo Externo'] || "";
+      if (!out.CodigoExterno) out.CodigoExterno = raw['ID Licitacion'] || raw['ID Licitaci�n'] || raw['ID Licitación'] || raw.CodigoExterno || raw['Codigo Externo'] || "";
       if (!out.Nombre) out.Nombre = raw.Nombre || raw['Nombre'] || "";
       out.Monto = toNumber(raw['Monto Estimado'] || raw.Monto || raw['Monto'] || 0);
       if (!out.FechaCierre) out.FechaCierre = raw['Fecha Cierre'] || raw.FechaCierre || "";
-      if (!out.Descripcion) out.Descripcion = raw.Descripcion || raw['Descripcion'] || raw['Descripción'] || raw['DescripciÃ³n'] || "";
+      if (!out.Descripcion) out.Descripcion = raw.Descripcion || raw['Descripcion'] || raw['Descripci�n'] || raw['Descripción'] || "";
       if (!out.TipoLicitacion) out.TipoLicitacion = raw['Tipo Licitacion'] || raw.Categoria || raw['Codigo Tipo'] || "Sin tipo";
       if (!out.Organismo) out.Organismo = raw['Nombre Organismo'] || raw.Organismo || "";
       if (!out.EstadoAPI) out.EstadoAPI = raw.Estado || raw['Estado'] || "";
@@ -1606,8 +1611,15 @@
       if (!out.EstadoTrabajo) out.EstadoTrabajo = raw.EstadoTrabajo || raw['EstadoTrabajo'] || raw['Estado Trabajo'] || "Sin Evaluar";
       out.EstadoTrabajo = normalizeGestionState(out.EstadoTrabajo);
       if (!out.Producto) out.Producto = raw['Nombre Producto (1er Item)'] || raw.Producto || raw.Proveedor || "";
-      // compute general classification and subcategory
+      // compute general classification, subcategory and TI classification
       const cls = classifyProduct({
+        Nombre: out.Nombre,
+        Producto: out.Producto,
+        Descripcion: out.Descripcion,
+        TipoLicitacion: out.TipoLicitacion,
+        Organismo: out.Organismo
+      });
+      const ti = classifyTiProduct({
         Nombre: out.Nombre,
         Producto: out.Producto,
         Descripcion: out.Descripcion,
@@ -1616,6 +1628,8 @@
       });
       out.CategoriaGeneral = cls.general;
       out.Subcategoria = cls.sub;
+      out.ClaseTI = ti.general;
+      out.SubClaseTI = ti.sub;
       if (!out.Responsable) out.Responsable = raw.Responsable || raw['Nombre Usuario'] || "";
       if (!out.Comentario) out.Comentario = raw.Comentario || "";
       if (!out.Prioridad) out.Prioridad = raw.Prioridad || "Media";
@@ -1686,20 +1700,20 @@
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        .replace(/Ã¡/g, "a")
-        .replace(/Ã©/g, "e")
-        .replace(/Ã­/g, "i")
-        .replace(/Ã³/g, "o")
-        .replace(/Ãº/g, "u")
-        .replace(/Ã±/g, "n")
-        .replace(/Ã¼/g, "u")
-        .replace(/Ã/g, "a")
-        .replace(/Ã‰/g, "e")
-        .replace(/Ã/g, "i")
-        .replace(/Ã“/g, "o")
-        .replace(/Ãš/g, "u")
-        .replace(/Ã‘/g, "n")
-        .replace(/Ãœ/g, "u")
+        .replace(/á/g, "a")
+        .replace(/é/g, "e")
+        .replace(/í/g, "i")
+        .replace(/ó/g, "o")
+        .replace(/ú/g, "u")
+        .replace(/ñ/g, "n")
+        .replace(/ü/g, "u")
+        .replace(/Á/g, "a")
+        .replace(/É/g, "e")
+        .replace(/Í/g, "i")
+        .replace(/Ó/g, "o")
+        .replace(/Ú/g, "u")
+        .replace(/Ñ/g, "n")
+        .replace(/Ü/g, "u")
         .replace(/\s+/g, " ")
         .trim();
     }
@@ -1736,7 +1750,7 @@
       el.searchTokens.innerHTML = st.searchTerms.map(term => `
         <span class="search-tag">
           <span>${esc(term.raw)}</span>
-          <button type="button" data-search-remove="${esc(term.norm)}" aria-label="Quitar término ${esc(term.raw)}"><i class="bi bi-x-lg"></i></button>
+          <button type="button" data-search-remove="${esc(term.norm)}" aria-label="Quitar t�rmino ${esc(term.raw)}"><i class="bi bi-x-lg"></i></button>
         </span>
       `).join("");
     }
@@ -1751,7 +1765,7 @@
         if (!norm) continue;
         if (st.searchTerms.some(term => term.norm === norm)) continue;
         if (st.searchTerms.length >= 8) {
-          toast("Puedes agregar hasta 8 términos de búsqueda.");
+          toast("Puedes agregar hasta 8 t�rminos de b�squeda.");
           break;
         }
         st.searchTerms.push({ raw: part, norm: norm });
@@ -1816,7 +1830,7 @@
 
       const groups = [
         {
-          general: "Tecnología",
+          general: "Tecnolog�a",
           subs: [
             { sub: "Software", rx: /\b(software|licencia|licenciamiento|plataforma|sistema|aplicacion|app|web|portal|moodle|erp|crm|sga)\b/, w: 6 },
             { sub: "Infraestructura", rx: /\b(servidor|cloud|nube|hosting|datacenter|virtualizacion|backup|storage|respaldo)\b/, w: 5 },
@@ -1829,10 +1843,10 @@
         {
           general: "Salud",
           subs: [
-            { sub: "Hospital y Clínica", rx: /\b(hospital|salud|clinica|clinico|consultorio|cesfam|sapu|odontologia|odontologico|farmacia|laboratorio|anestesia|pabellon)\b/, w: 6 },
-            { sub: "Insumos Médicos", rx: /\b(insumo|insumos|medic|quirurg|reactivo|material medico|gases medicinales|esteriliz|instrumental)\b/, w: 5 },
-            { sub: "Equipamiento Médico", rx: /\b(equipo medico|equipo clinico|biomedic|ecografo|resonancia|radiologia|anestesia|monitor multiparametro|desfibrilador)\b/, w: 5 },
-            { sub: "Servicios Médicos", rx: /\b(servicio medico|prestaciones medicas|atencion medica|examenes|procedimientos)\b/, w: 4 }
+            { sub: "Hospital y Cl�nica", rx: /\b(hospital|salud|clinica|clinico|consultorio|cesfam|sapu|odontologia|odontologico|farmacia|laboratorio|anestesia|pabellon)\b/, w: 6 },
+            { sub: "Insumos M�dicos", rx: /\b(insumo|insumos|medic|quirurg|reactivo|material medico|gases medicinales|esteriliz|instrumental)\b/, w: 5 },
+            { sub: "Equipamiento M�dico", rx: /\b(equipo medico|equipo clinico|biomedic|ecografo|resonancia|radiologia|anestesia|monitor multiparametro|desfibrilador)\b/, w: 5 },
+            { sub: "Servicios M�dicos", rx: /\b(servicio medico|prestaciones medicas|atencion medica|examenes|procedimientos)\b/, w: 4 }
           ]
         },
         {
@@ -1845,16 +1859,16 @@
           ]
         },
         {
-          general: "Construcción",
+          general: "Construcci�n",
           subs: [
             { sub: "Obras", rx: /\b(obra|construccion|edificacion|pavimento|pavimentacion|reparacion infraestructura)\b/, w: 5 },
             { sub: "Materiales", rx: /\b(material|cemento|hormigon|grava|moldaje|acero|ladrillo|tuberia|fierro)\b/, w: 4 }
           ]
         },
         {
-          general: "Educación",
+          general: "Educaci�n",
           subs: [
-            { sub: "Capacitación", rx: /\b(capacitacion|educacion|escuela|docente|aula|aprendizaje)\b/, w: 4 }
+            { sub: "Capacitacion", rx: /\b(capacitacion|educacion|escuela|docente|aula|aprendizaje)\b/, w: 4 }
           ]
         },
         {
@@ -1890,11 +1904,11 @@
         return { general: group.general, score: score, sub: bestSub };
       });
 
-      const tech = scored.find(item => item.general === "Tecnología") || { score: 0, sub: "General" };
+      const tech = scored.find(item => item.general === "Tecnolog�a") || { score: 0, sub: "General" };
       const health = scored.find(item => item.general === "Salud") || { score: 0, sub: "General" };
 
       if (tech.score > 0 && tech.score >= health.score + 1) {
-        return { general: "Tecnología", sub: tech.sub || "General" };
+        return { general: "Tecnolog�a", sub: tech.sub || "General" };
       }
 
       const ordered = scored.sort((a, b) => b.score - a.score);
@@ -1907,6 +1921,71 @@
       if (/\b(servicio|contrato|contratacion)\b/.test(s)) return { general: "Servicios", sub: "General" };
       if (/\b(mantenimiento|mantencion|mantenim)\b/.test(s)) return { general: "Servicios", sub: "Mantenimiento" };
       return { general: "Otros", sub: "Otros" };
+    }
+
+    function classifyTiProduct(input) {
+      const source = typeof input === "string" ? { texto: input } : (input || {});
+      const s = normalizeSearchText([
+        source.texto,
+        source.Nombre,
+        source.Producto,
+        source.Descripcion,
+        source.TipoLicitacion,
+        source.Organismo
+      ].filter(Boolean).join(" "));
+
+      const groups = [
+        {
+          general: "Hardware",
+          subs: [
+            { sub: "Infraestructura", rx: /\b(servidor|storage|rack|ups|switch|router|firewall|datacenter|cableado|redes?|wifi|antena)\b/, w: 6 },
+            { sub: "Equipo de Usuario", rx: /\b(computador|notebook|laptop|tablet|impresora|monitor|scanner|escaner|perifericos?)\b/, w: 5 },
+            { sub: "Componentes", rx: /\b(hardware|componente|tarjeta|disco|memoria|procesador|fuente|cable|patch cord)\b/, w: 4 }
+          ]
+        },
+        {
+          general: "Software",
+          subs: [
+            { sub: "Licencias", rx: /\b(software|licencia|licenciamiento|saas|erp|crm|moodle|plataforma|sistema|aplicacion|app|portal|web|base de datos|bd)\b/, w: 6 },
+            { sub: "Desarrollo", rx: /\b(desarrollo|programacion|codificacion|integracion|implementacion de software)\b/, w: 5 },
+            { sub: "Nube", rx: /\b(cloud|nube|hosting|backup|storage|respaldo)\b/, w: 4 }
+          ]
+        },
+        {
+          general: "Servicios TI",
+          subs: [
+            { sub: "Mesa de ayuda", rx: /\b(mesa de ayuda|help desk|soporte|soporte tecnico|atencion a usuarios)\b/, w: 6 },
+            { sub: "Mantencion TI", rx: /\b(mantencion informatica|mantenimiento informatico|soporte informatico|reparacion informatica)\b/, w: 6 },
+            { sub: "Implementacion", rx: /\b(implementacion|integracion|migracion|consultoria ti|servicios informaticos)\b/, w: 5 },
+            { sub: "Capacitacion", rx: /\b(capacitacion|formacion|entrenamiento|adopcion digital)\b/, w: 4 }
+          ]
+        }
+      ];
+
+      let winner = null;
+      for (const group of groups) {
+        let score = 0;
+        let bestSub = group.subs[0] ? group.subs[0].sub : "General";
+        let bestSubScore = -1;
+
+        for (const sub of group.subs) {
+          const hits = (s.match(new RegExp(sub.rx.source, "g")) || []).length;
+          if (!hits) continue;
+          const subScore = hits * sub.w;
+          score += subScore;
+          if (subScore > bestSubScore) {
+            bestSubScore = subScore;
+            bestSub = sub.sub;
+          }
+        }
+
+        if (score > 0 && (!winner || score > winner.score)) {
+          winner = { general: group.general, sub: bestSub, score: score };
+        }
+      }
+
+      if (!winner) return { general: "", sub: "" };
+      return { general: winner.general, sub: winner.sub };
     }
 
     function toast(msg) {
@@ -1995,10 +2074,10 @@
         raw.Link,
         raw.link,
         raw['URL Licitacion'],
-        raw['URL Licitación'],
+        raw['URL Licitaci�n'],
         raw['UrlLicitacion'],
         raw['Url Licitacion'],
-        raw['Url Licitación']
+        raw['Url Licitaci�n']
       ].filter(Boolean).map(v => String(v).trim());
 
       const expanded = [];
@@ -2019,7 +2098,7 @@
     }
 
     function buildPublicoUrlFromRow(row) {
-      const id = row && (row.CodigoExterno || row._raw && (row._raw['ID Licitacion'] || row._raw['ID Licitación'] || row._raw['CodigoExterno']));
+      const id = row && (row.CodigoExterno || row._raw && (row._raw['ID Licitacion'] || row._raw['ID Licitaci�n'] || row._raw['CodigoExterno']));
       if (id) {
         return "https://www.mercadopublico.cl/fichaLicitacion.html?idLicitacion=" + encodeURIComponent(id);
       }
@@ -2070,7 +2149,7 @@
         raw[String(key || "").trim()] = row[key];
       }
 
-      const id = raw.id || raw.ID || raw.codigo_externo || raw.CodigoExterno || raw['Codigo Externo'] || raw['ID Licitacion'] || raw['ID Licitación'] || "";
+      const id = raw.id || raw.ID || raw.codigo_externo || raw.CodigoExterno || raw['Codigo Externo'] || raw['ID Licitacion'] || raw['ID Licitaci�n'] || "";
       const visto = raw.visto || raw.Visto || raw['Visto'] || "FALSE";
       const estadoTrabajo = raw.estadoTrabajo || raw.EstadoTrabajo || raw['Estado Trabajo'] || raw.Estado || "Sin Evaluar";
       const responsable = raw.responsable || raw.Responsable || raw['Nombre Usuario'] || raw['Usuario'] || "";
@@ -2154,7 +2233,7 @@
             }
 
             if (typeof Papa === "undefined") {
-              reject(new Error("PapaParse no está disponible"));
+              reject(new Error("PapaParse no est� disponible"));
               return;
             }
 
@@ -2223,11 +2302,11 @@
           applyGestionData(st.filtered, cached);
           render();
           if (st.view === "list") refreshDataTable();
-          toast("Sin conexión a Sheet: mostrando cambios guardados en este navegador.");
+          toast("Sin conexi�n a Sheet: mostrando cambios guardados en este navegador.");
           return;
         }
 
-        console.warn("No se pudo cargar gestión publicada:", err);
+        console.warn("No se pudo cargar gesti�n publicada:", err);
       }
     }
 
@@ -2244,10 +2323,12 @@
       const cats = [...new Set(st.rows.map(r => r.TipoLicitacion).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
       const productos = [...new Set(st.rows.map(r => r.Producto).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
       const generales = [...new Set(st.rows.map(r => r.CategoriaGeneral).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const clasesTI = [...new Set(st.rows.map(r => r.ClaseTI).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
       const estadosApi = [...new Set(st.rows.map(r => String(r.EstadoAPI || "").trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
       el.cat.innerHTML = '<option value="">Todas</option>' + cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
       el.org.innerHTML = '<option value="">Todos</option>' + orgs.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join("");
       if (el.catGeneral) el.catGeneral.innerHTML = '<option value="">Todas</option>' + generales.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+      if (el.claseTI) el.claseTI.innerHTML = '<option value="">Todas</option>' + clasesTI.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
       if (el.producto) el.producto.innerHTML = '<option value="">Todos</option>' + productos.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join("");
       if (el.estado) {
         el.estado.innerHTML = '<option value="">Todos</option>' + estadosApi.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join("");
@@ -2270,6 +2351,7 @@
       const org = (el.org && el.org.value) ? el.org.value : "";
       const prod = (el.producto && el.producto.value) ? el.producto.value : "";
       const catGen = (el.catGeneral && el.catGeneral.value) ? el.catGeneral.value : "";
+      const claseTI = (el.claseTI && el.claseTI.value) ? el.claseTI.value : "";
       const est = (el.estado && el.estado.value) ? el.estado.value : "";
       const visto = (el.visto && el.visto.value) ? el.visto.value : "";
       const gestion = (el.gestion && el.gestion.value) ? el.gestion.value : "";
@@ -2284,6 +2366,7 @@
         const mOrg = !org || r.Organismo === org;
         const mProd = !prod || (r.Producto === prod);
         const mCatGen = !catGen || (r.CategoriaGeneral === catGen);
+        const mClaseTI = !claseTI || (r.ClaseTI === claseTI);
         const estadoLicitacion = String(r.EstadoAPI || "").trim();
         const mEst = !est || estadoLicitacion === est;
         const estadoGestion = String(r.EstadoTrabajo || "Sin Evaluar").trim() || "Sin Evaluar";
@@ -2292,14 +2375,14 @@
         if (visto === "TRUE") mV = r.Visto === "TRUE";
         if (visto === "FALSE") mV = r.Visto !== "TRUE";
         if (visto === "NUEVO") mV = isNew(r);
-        // Filtro de fechas: solo considera la fecha de emisión/publicación.
+        // Filtro de fechas: solo considera la fecha de emisi�n/publicaci�n.
         // Si se completa Desde/Hasta, muestra las publicadas dentro de ese rango.
         const hasDateRange = Boolean(fechaDesde || fechaHasta);
         const fp = dateOnly(r.FechaPublicacion);
         const start = fechaDesde || "0000-01-01";
         const end = fechaHasta || "9999-12-31";
         const mFecha = !hasDateRange ? true : (fp && fp !== "-" && fp >= start && fp <= end);
-        return mQ && mCat && mOrg && mProd && mCatGen && mEst && mGestion && mV && mFecha;
+        return mQ && mCat && mOrg && mProd && mCatGen && mClaseTI && mEst && mGestion && mV && mFecha;
       });
 
       // Ordenar
@@ -2364,7 +2447,7 @@
         await loadExcelJSScript();
       } catch (err) {
         console.error(err);
-        toast('No se pudo cargar ExcelJS. Reintenta con conexión estable.');
+        toast('No se pudo cargar ExcelJS. Reintenta con conexi�n estable.');
         return;
       }
 
@@ -2383,15 +2466,15 @@
       const sheet = book.addWorksheet('Licitaciones');
 
       const columns = [
-        { header: 'Código', key: 'CodigoExterno', width: 20 },
+        { header: 'C�digo', key: 'CodigoExterno', width: 20 },
         { header: 'Nombre', key: 'Nombre', width: 45 },
         { header: 'Organismo', key: 'Organismo', width: 30 },
         { header: 'Producto', key: 'Producto', width: 30 },
         { header: 'Tipo', key: 'TipoLicitacion', width: 25 },
         { header: 'Monto', key: 'Monto', width: 15 },
-        { header: 'Fecha Publicación', key: 'FechaPublicacion', width: 18 },
+        { header: 'Fecha Publicaci�n', key: 'FechaPublicacion', width: 18 },
         { header: 'Fecha Cierre', key: 'FechaCierre', width: 18 },
-        { header: 'Días Restantes', key: 'DiasRestantes', width: 15 },
+        { header: 'D�as Restantes', key: 'DiasRestantes', width: 15 },
         { header: 'Estado', key: 'EstadoTrabajo', width: 18 },
         { header: 'Visto', key: 'Visto', width: 10 },
         { header: 'Prioridad', key: 'Prioridad', width: 12 }
@@ -2539,7 +2622,7 @@
           { title: 'Nombre' },
           { title: 'Tipo' },
           { title: 'Monto' },
-          { title: 'Días' },
+          { title: 'D�as' },
           { title: 'Estado' },
           { title: 'Acciones', orderable: false }
         ],
@@ -2815,6 +2898,7 @@
       if (el.gestion) el.gestion.value = "";
       if (el.producto) el.producto.value = "";
       if (el.catGeneral) el.catGeneral.value = "";
+      if (el.claseTI) el.claseTI.value = "";
       if (el.fechaDesde) el.fechaDesde.value = "";
       if (el.fechaHasta) el.fechaHasta.value = "";
       if (el.ordenarPor) el.ordenarPor.value = "";
@@ -2931,6 +3015,7 @@
     if (el.gestion) el.gestion.addEventListener("change", applyDebounced);
     if (el.producto) el.producto.addEventListener("change", applyDebounced);
     if (el.catGeneral) el.catGeneral.addEventListener("change", applyDebounced);
+    if (el.claseTI) el.claseTI.addEventListener("change", applyDebounced);
     if (el.fechaDesde) el.fechaDesde.addEventListener("change", applyDebounced);
     if (el.fechaHasta) el.fechaHasta.addEventListener("change", applyDebounced);
     if (el.ordenarPor) el.ordenarPor.addEventListener("change", applyDebounced);
@@ -3010,7 +3095,7 @@
       const fieldsCloseBtn = document.getElementById('fieldsClose');
 
       async function fetchAndShowHeaders(){
-        fieldsList.textContent = 'Verificando conexión al CSV...';
+        fieldsList.textContent = 'Verificando conexi�n al CSV...';
         try {
           // Intenta obtener el CSV (evita cache)
           const res = await fetch(CSV_URL, { method: 'GET', cache: 'no-store' });
@@ -3040,10 +3125,10 @@
               fieldsList.textContent = 'No se pudieron determinar los headers.';
             }
           } else {
-            fieldsList.textContent = `Conexión OK (HTTP ${res.status}).\n\n` + fields.join('\n');
+            fieldsList.textContent = `Conexi�n OK (HTTP ${res.status}).\n\n` + fields.join('\n');
           }
 
-          // Comparar con lo que ya está cargado en memoria (st.rows) y avisar si difiere
+          // Comparar con lo que ya est� cargado en memoria (st.rows) y avisar si difiere
           if (st.rows && st.rows.length) {
             const loaded = Object.keys(st.rows[0]._raw || {});
             const onlyInFetched = fields.filter(f => !loaded.includes(f));
@@ -3057,7 +3142,7 @@
           fieldsModal.classList.add('open');
           fieldsModal.setAttribute('aria-hidden','false');
         } catch (err) {
-          // CORS o network errores quedarán aquí
+          // CORS o network errores quedar�n aqu�
           fieldsList.textContent = 'Error conectando al CSV: ' + (err && err.message ? err.message : String(err));
           fieldsModal.classList.add('open');
           fieldsModal.setAttribute('aria-hidden','false');
