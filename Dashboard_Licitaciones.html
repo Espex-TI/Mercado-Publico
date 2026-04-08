@@ -259,19 +259,21 @@
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 8px;
+      min-height: 0;
     }
 
     .search-tag {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      border: 1px solid var(--line);
-      background: var(--chip);
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.14);
       border-radius: 999px;
-      padding: 5px 10px;
+      padding: 6px 12px;
       font-size: .72rem;
       font-weight: 700;
-      color: #38507f;
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(0,0,0,.08);
     }
 
     .search-tag button {
@@ -283,6 +285,14 @@
       background: transparent;
       color: inherit;
       line-height: 1;
+      font-size: .82rem;
+    }
+
+    body[data-theme="light"] .search-tag {
+      border-color: #dbe5f5;
+      background: #ffffff;
+      color: #29416b;
+      box-shadow: 0 6px 14px rgba(31,42,61,.08);
     }
 
     .search-help {
@@ -2905,6 +2915,15 @@
     if (el.pageSizeBottom) el.pageSizeBottom.value = st.pageSize;
 
     el.q.addEventListener("input", applyDebounced);
+    el.q.addEventListener("keydown", handleSearchKeydown);
+    if (el.searchAdd) el.searchAdd.addEventListener("click", () => addSearchTerm(el.q.value));
+    if (el.searchTokens) {
+      el.searchTokens.addEventListener("click", event => {
+        const btn = event.target.closest("[data-search-remove]");
+        if (!btn) return;
+        removeSearchTerm(btn.dataset.searchRemove || "");
+      });
+    }
     el.cat.addEventListener("change", applyDebounced);
     el.org.addEventListener("change", applyDebounced);
     el.estado.addEventListener("change", applyDebounced);
