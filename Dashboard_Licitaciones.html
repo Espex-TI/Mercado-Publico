@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard Licitaciones Mercado Publico</title>
+  <title>Dashboard Licitaciones Mercado Público</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -1190,7 +1190,7 @@
 </head>
 <body>
 
-  <button id="sidebarToggle" class="btn btn-light btn-sm sidebar-toggle" type="button" aria-label="Abrir men� lateral"><i class="bi bi-list"></i></button>
+  <button id="sidebarToggle" class="btn btn-light btn-sm sidebar-toggle" type="button" aria-label="Abrir menú lateral"><i class="bi bi-list"></i></button>
 
   <main class="container-fluid py-3">
     <div class="row g-4 dashboard-shell">
@@ -1206,7 +1206,7 @@
                     <span>Panel de licitaciones</span>
                   </div>
                 </div>
-                <button id="sidebarClose" class="btn btn-sm btn-light sidebar-close-btn" type="button" aria-label="Cerrar men�"><i class="bi bi-x-lg"></i></button>
+                <button id="sidebarClose" class="btn btn-sm btn-light sidebar-close-btn" type="button" aria-label="Cerrar menú"><i class="bi bi-x-lg"></i></button>
               </div>
               <button id="themeToggle" class="btn btn-sm btn-outline-light w-100 mb-3"><i class="bi bi-moon-stars"></i> Modo Oscuro</button>
               <form id="sidebar-filtros" class="mb-4">
@@ -1214,14 +1214,14 @@
                   <label for="q">Buscar</label>
                   <div class="input-group">
                     <input id="q" type="text" class="form-control" placeholder="Buscar..." />
-                    <button class="btn btn-outline-primary" id="searchAdd" title="Agregar t�rmino" type="button"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
+                    <button class="btn btn-outline-primary" id="searchAdd" title="Agregar término" type="button"><i class="bi bi-plus-lg me-1"></i>Agregar</button>
                     <button class="btn btn-outline-secondary" id="reset" title="Limpiar filtros" type="button"><i class="bi bi-x-lg me-1"></i>Limpiar filtros</button>
                   </div>
                   <div id="searchTokens" class="search-tags" aria-live="polite"></div>
-                  <span class="search-help">Escribe un t�rmino y presiona Enter o Agregar. Los t�rminos se combinan simult�neamente.</span>
+                  <span class="search-help">Escribe un término y presiona Enter o Agregar. Los términos se combinan simultáneamente.</span>
                 </div>
                 <div class="field mb-2">
-                  <label for="cat">Categor�a</label>
+                  <label for="cat">Categoría</label>
                   <select id="cat" class="form-select"></select>
                 </div>
                 <div class="field mb-2">
@@ -1237,7 +1237,7 @@
                   <select id="visto" class="form-select"></select>
                 </div>
                 <div class="field mb-2">
-                  <label for="gestion">Gesti�n</label>
+                  <label for="gestion">Gestión</label>
                   <select id="gestion" class="form-select">
                     <option value="">Todas</option>
                     <option value="Sin Evaluar">Sin Evaluar</option>
@@ -1248,11 +1248,11 @@
                   </select>
                 </div>
                 <div class="field mb-2">
-                  <label for="catGeneral">Clasificacion</label>
+                  <label for="catGeneral">Clasificación</label>
                   <select id="catGeneral" class="form-select"></select>
                 </div>
                 <div class="field mb-2">
-                  <label for="claseTI">Clasificacion TI</label>
+                  <label for="claseTI">Clasificación TI</label>
                   <select id="claseTI" class="form-select"></select>
                 </div>
                 <div class="field mb-2">
@@ -1281,12 +1281,12 @@
           <div class="top-head d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
             <div class="title d-flex align-items-start gap-2">
               <div>
-                <h1 class="mb-1">Dashboard Licitaciones Mercado Publico</h1>
+                <h1 class="mb-1">Dashboard Licitaciones Mercado Público</h1>
                 <p class="mb-0">Panel de control de licitaciones y KPIs</p>
               </div>
             </div>
             <div class="chips d-flex flex-wrap gap-2 justify-content-end">
-              <span class="chip"><i class="bi bi-lightning-charge text-warning me-1"></i>R�pido</span>
+              <span class="chip"><i class="bi bi-lightning-charge text-warning me-1"></i>Rápido</span>
               <span class="chip"><i class="bi bi-shield-check text-success me-1"></i>Seguro</span>
               <span class="chip"><i class="bi bi-cloud-arrow-down text-primary me-1"></i>Actualizable</span>
             </div>
@@ -1328,8 +1328,8 @@
             <label for="ordenarPor" class="sort-label">Ordenar</label>
             <select id="ordenarPor" class="form-select form-select-sm">
               <option value="">Predeterminado</option>
-              <option value="dias">D�as (menor a mayor)</option>
-              <option value="dias_desc">D�as (mayor a menor)</option>
+              <option value="dias">Días (menor a mayor)</option>
+              <option value="dias_desc">Días (mayor a menor)</option>
               <option value="monto">Monto (mayor a menor)</option>
               <option value="monto_asc">Monto (menor a mayor)</option>
               <option value="nombre">Nombre (A-Z)</option>
@@ -1364,7 +1364,7 @@
                   <th>Nombre</th>
                   <th>Tipo</th>
                   <th>Monto</th>
-                  <th>D�as</th>
+                  <th>Días</th>
                   <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
@@ -1392,7 +1392,7 @@
   </main>
 
   <div id="sidebarBackdrop" class="sidebar-backdrop" hidden></div>
-  <div class="scroll-nav" aria-label="Navegaci�n r�pida">
+  <div class="scroll-nav" aria-label="Navegación rápida">
     <button id="scrollTopBtn" class="btn btn-primary btn-sm" type="button" aria-label="Ir al inicio"><i class="bi bi-arrow-up"></i></button>
     <button id="scrollBottomBtn" class="btn btn-primary btn-sm" type="button" aria-label="Ir al final"><i class="bi bi-arrow-down"></i></button>
   </div>
@@ -1411,21 +1411,21 @@
         <div class="col-md-4"><div class="box"><b>Organismo</b><span id="mdOrg">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Producto</b><span id="mdProv">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Monto</b><span id="mdMonto">-</span></div></div>
-        <div class="col-md-4"><div class="box"><b>Publicaci�n</b><span id="mdPub">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Publicación</b><span id="mdPub">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Cierre</b><span id="mdCloseDate">-</span></div></div>
-        <div class="col-md-4"><div class="box"><b>D�as</b><span id="mdDias">-</span></div></div>
-        <div class="col-md-4"><div class="box"><b>Tipo Licitaci�n</b><span id="mdCat">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Días</b><span id="mdDias">-</span></div></div>
+        <div class="col-md-4"><div class="box"><b>Tipo Licitación</b><span id="mdCat">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Estado</b><span id="mdEstado">-</span></div></div>
         <div class="col-md-4"><div class="box"><b>Prioridad</b><span id="mdPrio">-</span></div></div>
       </div>
 
       <div class="mb-3">
-        <b class="text-secondary small">Descripci�n</b>
+        <b class="text-secondary small">Descripción</b>
         <div id="mdDesc" class="full"></div>
       </div>
 
       <section class="edit">
-        <strong class="text-primary mb-2">Gesti�n</strong>
+        <strong class="text-primary mb-2">Gestión</strong>
         <div class="row g-2">
           <div class="col-md-4">
             <div class="field">
@@ -1476,12 +1476,12 @@
         <button id="fieldsClose" class="close" type="button">Cerrar</button>
       </header>
       <div id="fieldsList" class="full" style="white-space:pre-wrap; max-height:60vh; overflow:auto;">
-        <!-- Lista de campos se llenar� din�micamente -->
+        <!-- Lista de campos se llenará dinámicamente -->
       </div>
     </article>
   </section>
 
-  <div id="toast" class="toast">Accion simulada</div>
+  <div id="toast" class="toast">Acción simulada</div>
 
   <!-- Dependencias JS: jQuery, DataTables y Bootstrap -->
   <!-- jQuery debe ir primero y sin integrity para evitar bloqueos -->
@@ -1490,7 +1490,7 @@
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
-  <!-- Bootstrap debe ir despu�s de jQuery si usas plugins que dependen de �l -->
+  <!-- Bootstrap debe ir después de jQuery si usas plugins que dependen de él -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
@@ -1595,11 +1595,11 @@
       out._raw = Object.assign({}, raw);
 
       // Provide convenient aliases only if they are missing, do NOT remove or rename original headers
-      if (!out.CodigoExterno) out.CodigoExterno = raw['ID Licitacion'] || raw['ID Licitaci�n'] || raw['ID Licitación'] || raw.CodigoExterno || raw['Codigo Externo'] || "";
+      if (!out.CodigoExterno) out.CodigoExterno = raw['ID Licitacion'] || raw['ID Licitación'] || raw.CodigoExterno || raw['Codigo Externo'] || "";
       if (!out.Nombre) out.Nombre = raw.Nombre || raw['Nombre'] || "";
       out.Monto = toNumber(raw['Monto Estimado'] || raw.Monto || raw['Monto'] || 0);
       if (!out.FechaCierre) out.FechaCierre = raw['Fecha Cierre'] || raw.FechaCierre || "";
-      if (!out.Descripcion) out.Descripcion = raw.Descripcion || raw['Descripcion'] || raw['Descripci�n'] || raw['Descripción'] || "";
+      if (!out.Descripcion) out.Descripcion = raw.Descripcion || raw['Descripcion'] || raw['Descripción'] || "";
       if (!out.TipoLicitacion) out.TipoLicitacion = raw['Tipo Licitacion'] || raw.Categoria || raw['Codigo Tipo'] || "Sin tipo";
       if (!out.Organismo) out.Organismo = raw['Nombre Organismo'] || raw.Organismo || "";
       if (!out.EstadoAPI) out.EstadoAPI = raw.Estado || raw['Estado'] || "";
@@ -1750,7 +1750,7 @@
       el.searchTokens.innerHTML = st.searchTerms.map(term => `
         <span class="search-tag">
           <span>${esc(term.raw)}</span>
-          <button type="button" data-search-remove="${esc(term.norm)}" aria-label="Quitar t�rmino ${esc(term.raw)}"><i class="bi bi-x-lg"></i></button>
+          <button type="button" data-search-remove="${esc(term.norm)}" aria-label="Quitar término ${esc(term.raw)}"><i class="bi bi-x-lg"></i></button>
         </span>
       `).join("");
     }
@@ -1765,7 +1765,7 @@
         if (!norm) continue;
         if (st.searchTerms.some(term => term.norm === norm)) continue;
         if (st.searchTerms.length >= 8) {
-          toast("Puedes agregar hasta 8 t�rminos de b�squeda.");
+          toast("Puedes agregar hasta 8 términos de búsqueda.");
           break;
         }
         st.searchTerms.push({ raw: part, norm: norm });
@@ -1830,7 +1830,7 @@
 
       const groups = [
         {
-          general: "Tecnolog�a",
+          general: "Tecnología",
           subs: [
             { sub: "Software", rx: /\b(software|licencia|licenciamiento|plataforma|sistema|aplicacion|app|web|portal|moodle|erp|crm|sga)\b/, w: 6 },
             { sub: "Infraestructura", rx: /\b(servidor|cloud|nube|hosting|datacenter|virtualizacion|backup|storage|respaldo)\b/, w: 5 },
@@ -1843,10 +1843,10 @@
         {
           general: "Salud",
           subs: [
-            { sub: "Hospital y Cl�nica", rx: /\b(hospital|salud|clinica|clinico|consultorio|cesfam|sapu|odontologia|odontologico|farmacia|laboratorio|anestesia|pabellon)\b/, w: 6 },
-            { sub: "Insumos M�dicos", rx: /\b(insumo|insumos|medic|quirurg|reactivo|material medico|gases medicinales|esteriliz|instrumental)\b/, w: 5 },
-            { sub: "Equipamiento M�dico", rx: /\b(equipo medico|equipo clinico|biomedic|ecografo|resonancia|radiologia|anestesia|monitor multiparametro|desfibrilador)\b/, w: 5 },
-            { sub: "Servicios M�dicos", rx: /\b(servicio medico|prestaciones medicas|atencion medica|examenes|procedimientos)\b/, w: 4 }
+            { sub: "Hospital y Clínica", rx: /\b(hospital|salud|clinica|clinico|consultorio|cesfam|sapu|odontologia|odontologico|farmacia|laboratorio|anestesia|pabellon)\b/, w: 6 },
+            { sub: "Insumos Médicos", rx: /\b(insumo|insumos|medic|quirurg|reactivo|material medico|gases medicinales|esteriliz|instrumental)\b/, w: 5 },
+            { sub: "Equipamiento Médico", rx: /\b(equipo medico|equipo clinico|biomedic|ecografo|resonancia|radiologia|anestesia|monitor multiparametro|desfibrilador)\b/, w: 5 },
+            { sub: "Servicios Médicos", rx: /\b(servicio medico|prestaciones medicas|atencion medica|examenes|procedimientos)\b/, w: 4 }
           ]
         },
         {
@@ -1859,16 +1859,16 @@
           ]
         },
         {
-          general: "Construcci�n",
+          general: "Construcción",
           subs: [
             { sub: "Obras", rx: /\b(obra|construccion|edificacion|pavimento|pavimentacion|reparacion infraestructura)\b/, w: 5 },
             { sub: "Materiales", rx: /\b(material|cemento|hormigon|grava|moldaje|acero|ladrillo|tuberia|fierro)\b/, w: 4 }
           ]
         },
         {
-          general: "Educaci�n",
+          general: "Educación",
           subs: [
-            { sub: "Capacitacion", rx: /\b(capacitacion|educacion|escuela|docente|aula|aprendizaje)\b/, w: 4 }
+            { sub: "Capacitación", rx: /\b(capacitacion|educacion|escuela|docente|aula|aprendizaje)\b/, w: 4 }
           ]
         },
         {
@@ -1904,11 +1904,11 @@
         return { general: group.general, score: score, sub: bestSub };
       });
 
-      const tech = scored.find(item => item.general === "Tecnolog�a") || { score: 0, sub: "General" };
+      const tech = scored.find(item => item.general === "Tecnología") || { score: 0, sub: "General" };
       const health = scored.find(item => item.general === "Salud") || { score: 0, sub: "General" };
 
       if (tech.score > 0 && tech.score >= health.score + 1) {
-        return { general: "Tecnolog�a", sub: tech.sub || "General" };
+        return { general: "Tecnología", sub: tech.sub || "General" };
       }
 
       const ordered = scored.sort((a, b) => b.score - a.score);
@@ -1955,9 +1955,9 @@
           general: "Servicios TI",
           subs: [
             { sub: "Mesa de ayuda", rx: /\b(mesa de ayuda|help desk|soporte|soporte tecnico|atencion a usuarios)\b/, w: 6 },
-            { sub: "Mantencion TI", rx: /\b(mantencion informatica|mantenimiento informatico|soporte informatico|reparacion informatica)\b/, w: 6 },
-            { sub: "Implementacion", rx: /\b(implementacion|integracion|migracion|consultoria ti|servicios informaticos)\b/, w: 5 },
-            { sub: "Capacitacion", rx: /\b(capacitacion|formacion|entrenamiento|adopcion digital)\b/, w: 4 }
+            { sub: "Mantención TI", rx: /\b(mantencion informatica|mantenimiento informatico|soporte informatico|reparacion informatica)\b/, w: 6 },
+            { sub: "Implementación", rx: /\b(implementacion|integracion|migracion|consultoria ti|servicios informaticos)\b/, w: 5 },
+            { sub: "Capacitación", rx: /\b(capacitacion|formacion|entrenamiento|adopcion digital)\b/, w: 4 }
           ]
         }
       ];
@@ -2074,10 +2074,10 @@
         raw.Link,
         raw.link,
         raw['URL Licitacion'],
-        raw['URL Licitaci�n'],
+        raw['URL Licitación'],
         raw['UrlLicitacion'],
         raw['Url Licitacion'],
-        raw['Url Licitaci�n']
+        raw['Url Licitación']
       ].filter(Boolean).map(v => String(v).trim());
 
       const expanded = [];
@@ -2098,7 +2098,7 @@
     }
 
     function buildPublicoUrlFromRow(row) {
-      const id = row && (row.CodigoExterno || row._raw && (row._raw['ID Licitacion'] || row._raw['ID Licitaci�n'] || row._raw['CodigoExterno']));
+      const id = row && (row.CodigoExterno || row._raw && (row._raw['ID Licitacion'] || row._raw['ID Licitación'] || row._raw['CodigoExterno']));
       if (id) {
         return "https://www.mercadopublico.cl/fichaLicitacion.html?idLicitacion=" + encodeURIComponent(id);
       }
@@ -2149,7 +2149,7 @@
         raw[String(key || "").trim()] = row[key];
       }
 
-      const id = raw.id || raw.ID || raw.codigo_externo || raw.CodigoExterno || raw['Codigo Externo'] || raw['ID Licitacion'] || raw['ID Licitaci�n'] || "";
+      const id = raw.id || raw.ID || raw.codigo_externo || raw.CodigoExterno || raw['Codigo Externo'] || raw['ID Licitacion'] || raw['ID Licitación'] || "";
       const visto = raw.visto || raw.Visto || raw['Visto'] || "FALSE";
       const estadoTrabajo = raw.estadoTrabajo || raw.EstadoTrabajo || raw['Estado Trabajo'] || raw.Estado || "Sin Evaluar";
       const responsable = raw.responsable || raw.Responsable || raw['Nombre Usuario'] || raw['Usuario'] || "";
@@ -2233,7 +2233,7 @@
             }
 
             if (typeof Papa === "undefined") {
-              reject(new Error("PapaParse no est� disponible"));
+              reject(new Error("PapaParse no está disponible"));
               return;
             }
 
@@ -2302,11 +2302,11 @@
           applyGestionData(st.filtered, cached);
           render();
           if (st.view === "list") refreshDataTable();
-          toast("Sin conexi�n a Sheet: mostrando cambios guardados en este navegador.");
+          toast("Sin conexión a Sheet: mostrando cambios guardados en este navegador.");
           return;
         }
 
-        console.warn("No se pudo cargar gesti�n publicada:", err);
+        console.warn("No se pudo cargar gestión publicada:", err);
       }
     }
 
@@ -2375,7 +2375,7 @@
         if (visto === "TRUE") mV = r.Visto === "TRUE";
         if (visto === "FALSE") mV = r.Visto !== "TRUE";
         if (visto === "NUEVO") mV = isNew(r);
-        // Filtro de fechas: solo considera la fecha de emisi�n/publicaci�n.
+        // Filtro de fechas: solo considera la fecha de emisión/publicación.
         // Si se completa Desde/Hasta, muestra las publicadas dentro de ese rango.
         const hasDateRange = Boolean(fechaDesde || fechaHasta);
         const fp = dateOnly(r.FechaPublicacion);
@@ -2447,7 +2447,7 @@
         await loadExcelJSScript();
       } catch (err) {
         console.error(err);
-        toast('No se pudo cargar ExcelJS. Reintenta con conexi�n estable.');
+        toast('No se pudo cargar ExcelJS. Reintenta con conexión estable.');
         return;
       }
 
@@ -2466,15 +2466,15 @@
       const sheet = book.addWorksheet('Licitaciones');
 
       const columns = [
-        { header: 'C�digo', key: 'CodigoExterno', width: 20 },
+        { header: 'Código', key: 'CodigoExterno', width: 20 },
         { header: 'Nombre', key: 'Nombre', width: 45 },
         { header: 'Organismo', key: 'Organismo', width: 30 },
         { header: 'Producto', key: 'Producto', width: 30 },
         { header: 'Tipo', key: 'TipoLicitacion', width: 25 },
         { header: 'Monto', key: 'Monto', width: 15 },
-        { header: 'Fecha Publicaci�n', key: 'FechaPublicacion', width: 18 },
+        { header: 'Fecha Publicación', key: 'FechaPublicacion', width: 18 },
         { header: 'Fecha Cierre', key: 'FechaCierre', width: 18 },
-        { header: 'D�as Restantes', key: 'DiasRestantes', width: 15 },
+        { header: 'Días Restantes', key: 'DiasRestantes', width: 15 },
         { header: 'Estado', key: 'EstadoTrabajo', width: 18 },
         { header: 'Visto', key: 'Visto', width: 10 },
         { header: 'Prioridad', key: 'Prioridad', width: 12 }
@@ -2533,13 +2533,13 @@
             <div class="head-row">
               <span class="code">${esc(r.CodigoExterno)}</span>
               <div class="flags">
-                <span class="flag ${flagByDays(r.DiasRestantes)}">${Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} dias` : "sin cierre"}</span>
+                <span class="flag ${flagByDays(r.DiasRestantes)}">${Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} días` : "sin cierre"}</span>
                 ${isNew(r) ? '<span class="flag f-new">NUEVO</span>' : ""}
                 <span class="flag ${visto ? "f-v" : "f-nv"}">${visto ? "VISTO" : "NO VISTO"}</span>
               </div>
             </div>
             <h3 class="name">${esc(r.Nombre)}</h3>
-            <p class="desc">${esc(r.Descripcion || "Sin descripcion")}</p>
+            <p class="desc">${esc(r.Descripcion || "Sin descripción")}</p>
             <div class="kv">
               <b>Tipo</b><span>${esc(r.TipoLicitacion)}</span>
               <b>Organismo</b><span>${esc(r.Organismo)}</span>
@@ -2563,7 +2563,7 @@
     function renderList(rows) {
       el.list.innerHTML = `
         <header class="list-head">
-          <span>Nombre</span><span>Tipo</span><span>Monto</span><span>Dias</span><span>Estado</span><span>Acciones</span>
+          <span>Nombre</span><span>Tipo</span><span>Monto</span><span>Días</span><span>Estado</span><span>Acciones</span>
         </header>
         ${rows.map(r => `
           <article class="list-row">
@@ -2573,7 +2573,7 @@
             </div>
             <span>${esc(r.TipoLicitacion)}</span>
             <span>${fmt(r.Monto)}</span>
-            <span>${Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} dias` : "-"}</span>
+            <span>${Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} días` : "-"}</span>
             <span><span class="status ${statusClass(r.EstadoTrabajo)}">${esc(r.EstadoTrabajo)}</span></span>
             <div class="actions">
               <button class="link-btn" type="button" data-a="view" data-c="${esc(r.CodigoExterno)}">Ver</button>
@@ -2592,7 +2592,7 @@
         const name = `<strong>${esc(r.Nombre)}</strong><br/><small style="color:var(--muted);">${esc(r.CodigoExterno)} - ${esc(r.Organismo)}</small>`;
         const tipo = esc(r.TipoLicitacion);
         const monto = fmt(r.Monto);
-        const dias = Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} dias` : "-";
+        const dias = Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} días` : "-";
         const estado = `<span class="status ${statusClass(r.EstadoTrabajo)}">${esc(r.EstadoTrabajo)}</span>`;
         const actions = `<button class="link-btn" type="button" data-a="view" data-c="${esc(r.CodigoExterno)}">Ver</button> <button class="link-btn" type="button" data-a="open" data-c="${esc(r.CodigoExterno)}">Abrir</button>`;
         return [name, tipo, monto, dias, estado, actions];
@@ -2622,7 +2622,7 @@
           { title: 'Nombre' },
           { title: 'Tipo' },
           { title: 'Monto' },
-          { title: 'D�as' },
+          { title: 'Días' },
           { title: 'Estado' },
           { title: 'Acciones', orderable: false }
         ],
@@ -2803,11 +2803,11 @@
       el.mdMonto.textContent = fmt(r.Monto);
       el.mdPub.textContent = dateOnly(r.FechaPublicacion);
       el.mdCloseDate.textContent = dateOnly(r.FechaCierre);
-      el.mdDias.textContent = Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} dias` : "-";
+      el.mdDias.textContent = Number.isFinite(Number(r.DiasRestantes)) ? `${r.DiasRestantes} días` : "-";
       el.mdCat.textContent = r.TipoLicitacion || "-";
       el.mdEstado.textContent = r.EstadoAPI || normalizeGestionState(r.EstadoTrabajo) || "Sin Evaluar";
       el.mdPrio.textContent = r.Prioridad || "Media";
-      el.mdDesc.textContent = r.Descripcion || "Sin descripcion";
+      el.mdDesc.textContent = r.Descripcion || "Sin descripción";
       el.edVisto.value = r.Visto === "TRUE" ? "TRUE" : "FALSE";
       el.edEstado.value = normalizeGestionState(r.EstadoTrabajo) || "Sin Evaluar";
       el.edOwner.value = r.Responsable || "";
@@ -3095,7 +3095,7 @@
       const fieldsCloseBtn = document.getElementById('fieldsClose');
 
       async function fetchAndShowHeaders(){
-        fieldsList.textContent = 'Verificando conexi�n al CSV...';
+        fieldsList.textContent = 'Verificando conexión al CSV...';
         try {
           // Intenta obtener el CSV (evita cache)
           const res = await fetch(CSV_URL, { method: 'GET', cache: 'no-store' });
@@ -3125,10 +3125,10 @@
               fieldsList.textContent = 'No se pudieron determinar los headers.';
             }
           } else {
-            fieldsList.textContent = `Conexi�n OK (HTTP ${res.status}).\n\n` + fields.join('\n');
+            fieldsList.textContent = `Conexión OK (HTTP ${res.status}).\n\n` + fields.join('\n');
           }
 
-          // Comparar con lo que ya est� cargado en memoria (st.rows) y avisar si difiere
+          // Comparar con lo que ya está cargado en memoria (st.rows) y avisar si difiere
           if (st.rows && st.rows.length) {
             const loaded = Object.keys(st.rows[0]._raw || {});
             const onlyInFetched = fields.filter(f => !loaded.includes(f));
@@ -3142,7 +3142,7 @@
           fieldsModal.classList.add('open');
           fieldsModal.setAttribute('aria-hidden','false');
         } catch (err) {
-          // CORS o network errores quedar�n aqu�
+          // CORS o errores de red quedarán aquí
           fieldsList.textContent = 'Error conectando al CSV: ' + (err && err.message ? err.message : String(err));
           fieldsModal.classList.add('open');
           fieldsModal.setAttribute('aria-hidden','false');
