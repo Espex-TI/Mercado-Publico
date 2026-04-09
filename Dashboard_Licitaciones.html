@@ -1936,14 +1936,28 @@
 
       const countHits = rx => (s.match(rx) || []).length;
 
-      const enterpriseHardwareSignals = /\b(computador|computadores|pc|notebook|laptop|workstation|servidor|servidores|blade|datacenter|rack|gabinete de red|switch|router|firewall|access point|punto de acceso|wifi|fibra optica|storage|almacenamiento|nas|san|backup|respaldo|ups|pdu|vmware|hyper-v)\b/g;
-      const broadNonTiSignals = /\b(hospital|clinica|salud|medic|biomed|paciente|farmacia|laboratorio|reactivo|anestesia|quirurg|dental|odont|resonancia|ecogra|radiolog|veterinari|asfalto|alcantarillado|vereda|paviment|obra civil|construccion|camarin|cancha|plaza|cocteleria|banqueteria|evento|produccion de eventos|aridos|camion|vehiculo|aseo|limpieza|vigilancia|seguridad fisica|uniforme|vestuario|gasfiteria|podas?)\b/g;
+      const enterpriseHardwareSignals = /\b(computador|computadores|pc|notebook|laptop|workstation|servidor|servidores|blade|datacenter|rack|gabinete de red|switch|router|firewall|storage|almacenamiento|nas|san|backup|respaldo|ups|pdu|vmware|hyper-v)\b/g;
+      const broadNonTiSignals = /\b(hospital|clinica|salud|medic|biomed|paciente|farmacia|laboratorio|reactivo|anestesia|quirurg|dental|odont|resonancia|ecogra|radiolog|veterinari|asfalto|alcantarillado|vereda|paviment|obra civil|construccion|camarin|cancha|plaza|cocteleria|banqueteria|evento|produccion de eventos|aridos|camion|vehiculo|aseo|limpieza|seguridad fisica|uniforme|vestuario|gasfiteria|podas?)\b/g;
+      const hardBlockNonTiSignals = /\b(reactivo|reactivos|medicamento|farmaco|farmacos|insumo medico|insumos medicos|anestesia|quirurg|odont|dental|cateter|hemodinamia|ecografo|tomografia|resonancia|radiologia|veterinari|esterilizacion|pabellon|camarin|multicancha|plaza|paviment|alcantarillado|agua potable|aguas lluvias|aridos|hormigon|cemento|banqueteria|catering|produccion de eventos|fiesta|festiv|podas?|arbolado|vigilancia fisica|guardia|transporte escolar|servicio de taxi|servicios de autobuses|vehiculos?|camion|camioneta|bus(es)?|medic(ina|o)|hospitalizacion|personal medico|personal administrativo|obras? civiles?)\b/g;
+      const explicitTiSignals = /\b(ti|tecnologia de la informacion|informatica|ciberseguridad|software|licenciamiento|licencia(s)?|erp|crm|saas|paas|iaas|hosting|cloud|nube|base de datos|sql|api|sistema operativo|windows server|linux|virtualizacion|vmware|hyper-v|servidor|storage|nas|san|switch|router|firewall|wifi|fibra optica|telefonia ip|voz ip|enlace de datos|videovigilancia|televigilancia|datacenter)\b/g;
+      const hardwareAssetSignals = /\b(computador|computadores|pc|notebook|laptop|workstation|servidor|servidores|storage|nas|san|switch|router|firewall|ups|rack|pdu|impresora|scanner|escaner|teclado|mouse|memoria ram|cpu|gpu|placa madre|tarjeta de red|ssd|hdd|disco duro)\b/g;
+      const softwareCoreSignals = /\b(software|licencia(s)?|licenciamiento|saas|erp|crm|sistema operativo|antivirus|ciberseguridad|base de datos|sql|api|middleware|desarrollo|programacion|web hosting|hosting|cloud|nube|active directory|autocad|adobe|sap)\b/g;
+      const servicesTiCoreSignals = /\b(soporte tecnico|soporte informatico|mesa de ayuda|help desk|servicios informaticos|consultoria ti|administracion de sistemas|hosting administrado|servicio de internet|ciberseguridad gestionada|monitoreo ti|integracion de sistemas|migracion|continuidad operacional ti)\b/g;
+      const telecomCoreSignals = /\b(telecomunicaciones|telefonia ip|voz ip|internet|enlace de datos|fibra optica|wifi|radioenlace|satelital|videovigilancia|televigilancia|camaras de seguridad|cctv|audiovisual|videoconferencia)\b/g;
+      const serviceContextSignals = /\b(servicio|servicios|arriendo|mantencion|mantenimiento|soporte|contratacion|convenio|suministro|hosting)\b/g;
 
       // Evita clasificar como TI equipos de salud/biomedica por palabras genericas como
       // "monitor" o "equipo" cuando no hay suficiente señal TI real.
       const healthScore = countHits(/\b(hospital|clinica|salud|medic|biomed|paciente|farmacia|laboratorio|reactivo|anestesia|quirurg|dental|odont|resonancia|ecogra|radiolog|desfibrilador|monitor multiparametro|insumo medico)\b/g);
       const nonTiScore = countHits(broadNonTiSignals);
+      const hardNonTiScore = countHits(hardBlockNonTiSignals);
       const enterpriseSignalScore = countHits(enterpriseHardwareSignals);
+      const explicitTiScore = countHits(explicitTiSignals);
+      const hardwareAssetScore = countHits(hardwareAssetSignals);
+      const softwareCoreScore = countHits(softwareCoreSignals);
+      const servicesTiCoreScore = countHits(servicesTiCoreSignals);
+      const telecomCoreScore = countHits(telecomCoreSignals);
+      const serviceContextScore = countHits(serviceContextSignals);
 
       const strongTiSignals = /\b(computador|notebook|laptop|tablet|celular|smartphone|servidor|nas|san|storage|rack|datacenter|switch|router|firewall|software|licencia|sistema operativo|administracion de redes|soporte tecnico|mesa de ayuda|help desk|telecomunicaciones|videoconferencia)\b/;
 
@@ -1986,7 +2000,7 @@
         }
       ];
 
-      let winner = null;
+      const scoredGroups = [];
       for (const group of groups) {
         let score = 0;
         let bestSub = group.subs[0] ? group.subs[0].sub : "General";
@@ -2003,25 +2017,52 @@
           }
         }
 
-        if (score > 0 && (!winner || score > winner.score)) {
-          winner = { general: group.general, sub: bestSub, score: score };
+        if (score > 0) scoredGroups.push({ general: group.general, sub: bestSub, score: score });
+      }
+
+      if (!scoredGroups.length) return { general: "", sub: "" };
+
+      const ordered = scoredGroups.sort((a, b) => b.score - a.score);
+
+      function isValidTiCandidate(candidate) {
+        if (!candidate || candidate.score < 4) return false;
+
+        // Contexto fuertemente no-TI: exige evidencia TI explicita.
+        if ((hardNonTiScore >= 2 || healthScore >= 2) && explicitTiScore < 1) return false;
+
+        if (candidate.general === "Hardware") {
+          if (hardwareAssetScore < 1) return false;
+          if (enterpriseSignalScore < 1) return false;
+          if (nonTiScore >= 2 && enterpriseSignalScore < 2) return false;
+          if (hardNonTiScore >= 1 && enterpriseSignalScore < 2) return false;
+          if (healthScore >= 1 && enterpriseSignalScore < 2) return false;
+          // Evita mandar a Hardware servicios de conectividad que son mas de Telecom.
+          if (serviceContextScore >= 2 && telecomCoreScore >= 1 && hardwareAssetScore < 2) return false;
         }
+
+        if (candidate.general === "Software") {
+          if (softwareCoreScore < 1) return false;
+          if (hardNonTiScore >= 2 && softwareCoreScore < 2) return false;
+        }
+
+        if (candidate.general === "Servicios TI") {
+          if (servicesTiCoreScore < 1) return false;
+          if (hardNonTiScore >= 2 && servicesTiCoreScore < 2) return false;
+        }
+
+        if (candidate.general === "Telecom y Audiovisual") {
+          if (telecomCoreScore < 1) return false;
+          if (hardNonTiScore >= 3 && telecomCoreScore < 2) return false;
+        }
+
+        // Regla global de salud: si no hay señal TI robusta, no clasificar en TI.
+        if (healthScore >= 2 && !strongTiSignals.test(s) && explicitTiScore < 1) return false;
+
+        return true;
       }
 
+      const winner = ordered.find(isValidTiCandidate);
       if (!winner) return { general: "", sub: "" };
-
-      // Umbral minimo para evitar ruido por palabras muy generales.
-      if (winner.score < 4) return { general: "", sub: "" };
-
-      // Hardware en modo estricto: exige señales claras de infraestructura TI empresarial.
-      if (winner.general === "Hardware") {
-        if (enterpriseSignalScore < 1) return { general: "", sub: "" };
-        if (nonTiScore >= 2 && enterpriseSignalScore < 2) return { general: "", sub: "" };
-      }
-
-      // Si predomina contexto salud y no hay señal TI fuerte, no clasificar en TI.
-      if (healthScore >= 2 && !strongTiSignals.test(s)) return { general: "", sub: "" };
-      if (healthScore >= 3 && winner.general === "Hardware" && winner.score < 12) return { general: "", sub: "" };
 
       return { general: winner.general, sub: winner.sub };
     }
