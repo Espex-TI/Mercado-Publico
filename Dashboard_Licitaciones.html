@@ -1939,14 +1939,12 @@
       const enterpriseHardwareSignals = /\b(computador|computadores|pc|notebook|laptop|workstation|servidor|servidores|blade|datacenter|rack|gabinete de red|switch|router|firewall|storage|almacenamiento|nas|san|backup|respaldo|ups|pdu|vmware|hyper-v)\b/g;
       const broadNonTiSignals = /\b(hospital|clinica|salud|medic|biomed|paciente|farmacia|laboratorio|reactivo|anestesia|quirurg|dental|odont|resonancia|ecogra|radiolog|veterinari|asfalto|alcantarillado|vereda|paviment|obra civil|construccion|camarin|cancha|plaza|cocteleria|banqueteria|evento|produccion de eventos|aridos|camion|vehiculo|aseo|limpieza|seguridad fisica|uniforme|vestuario|gasfiteria|podas?)\b/g;
       const hardBlockNonTiSignals = /\b(reactivo|reactivos|medicamento|farmaco|farmacos|insumo medico|insumos medicos|anestesia|quirurg|odont|dental|cateter|hemodinamia|ecografo|tomografia|resonancia|radiologia|veterinari|esterilizacion|pabellon|camarin|multicancha|plaza|paviment|alcantarillado|agua potable|aguas lluvias|aridos|hormigon|cemento|banqueteria|catering|produccion de eventos|fiesta|festiv|podas?|arbolado|vigilancia fisica|guardia|transporte escolar|servicio de taxi|servicios de autobuses|vehiculos?|camion|camioneta|bus(es)?|medic(ina|o)|hospitalizacion|personal medico|personal administrativo|obras? civiles?)\b/g;
-      const explicitTiSignals = /\b(ti|tecnologia de la informacion|informatica|ciberseguridad|software|licenciamiento|licencia(s)?|erp|crm|saas|paas|iaas|hosting|cloud|nube|base de datos|sql|api|sistema operativo|windows server|linux|virtualizacion|vmware|hyper-v|servidor|storage|nas|san|switch|router|firewall|wifi|fibra optica|telefonia ip|voz ip|enlace de datos|internet dedicado|servicio de comunicacion ip|sd-wan|videovigilancia|televigilancia|cctv|nvr|dvr|datacenter)\b/g;
+      const explicitTiSignals = /\b(ti|tecnologia de la informacion|informatica|ciberseguridad|software|licenciamiento|licencia(s)?|erp|crm|saas|paas|iaas|hosting|cloud|nube|base de datos|sql|api|sistema operativo|windows server|linux|virtualizacion|vmware|hyper-v|servidor|storage|nas|san|switch|router|firewall|wifi|fibra optica|telefonia ip|voz ip|enlace de datos|videovigilancia|televigilancia|datacenter)\b/g;
       const hardwareAssetSignals = /\b(computador|computadores|pc|notebook|laptop|workstation|servidor|servidores|storage|nas|san|switch|router|firewall|ups|rack|pdu|impresora|scanner|escaner|teclado|mouse|memoria ram|cpu|gpu|placa madre|tarjeta de red|ssd|hdd|disco duro)\b/g;
-      const softwareCoreSignals = /\b(software|licencia(s)?|licenciamiento|suscripcion(es)?|saas|erp|crm|sistema operativo|antivirus|ciberseguridad|base de datos|sql|api|middleware|web hosting|hosting|cloud|nube|active directory|autocad|adobe|sap|filemaker|moodle)\b/g;
-      const servicesTiCoreSignals = /\b(soporte tecnico informatico|soporte informatico|mesa de ayuda|help desk|servicios informaticos|consultoria ti|administracion de sistemas|hosting administrado|ciberseguridad gestionada|monitoreo ti|integracion de sistemas|migracion de sistemas|continuidad operacional ti|servicio integral ti|outsourcing ti)\b/g;
-      const telecomCoreSignals = /\b(telecomunicaciones|telefonia ip|voz ip|internet dedicado|enlace de datos|fibra optica|wifi|radioenlace|satelital|videovigilancia|televigilancia|camaras de seguridad|cctv|videoconferencia|servicio de comunicacion ip|red wan|red lan|sd-wan)\b/g;
+      const softwareCoreSignals = /\b(software|licencia(s)?|licenciamiento|saas|erp|crm|sistema operativo|antivirus|ciberseguridad|base de datos|sql|api|middleware|desarrollo|programacion|web hosting|hosting|cloud|nube|active directory|autocad|adobe|sap)\b/g;
+      const servicesTiCoreSignals = /\b(soporte tecnico|soporte informatico|mesa de ayuda|help desk|servicios informaticos|consultoria ti|administracion de sistemas|hosting administrado|servicio de internet|ciberseguridad gestionada|monitoreo ti|integracion de sistemas|migracion|continuidad operacional ti)\b/g;
+      const telecomCoreSignals = /\b(telecomunicaciones|telefonia ip|voz ip|internet|enlace de datos|fibra optica|wifi|radioenlace|satelital|videovigilancia|televigilancia|camaras de seguridad|cctv|audiovisual|videoconferencia)\b/g;
       const serviceContextSignals = /\b(servicio|servicios|arriendo|mantencion|mantenimiento|soporte|contratacion|convenio|suministro|hosting)\b/g;
-      const institutionalNoiseSignals = /\b(sistema de informacion y gestion de compras|mercado publico|bases administrativas|bases tecnicas|resolucion exenta|ley n|articulo|reglamento)\b/g;
-      const tiAnchorSignals = /\b(computador|computadores|notebook|laptop|servidor|servidores|storage|switch|router|firewall|ups|software|licencia|licenciamiento|saas|erp|crm|internet dedicado|enlace de datos|fibra optica|telefonia ip|voz ip|cloud|nube|hosting|ciberseguridad|datacenter|cctv|videovigilancia|televigilancia|plataforma web|plataforma digital|sistema informatico|sistema de gestion|sistema de asistencia|sistema de inventario|sistema de turnos|sistema de trazabilidad|gestion de personas|transformacion digital|gobernanza de datos|active directory|windows server|linux|virtualizacion|vmware|hyper-v|moodle|filemaker|autocad|adobe|sap)\b/g;
 
       // Evita clasificar como TI equipos de salud/biomedica por palabras genericas como
       // "monitor" o "equipo" cuando no hay suficiente señal TI real.
@@ -1960,15 +1958,6 @@
       const servicesTiCoreScore = countHits(servicesTiCoreSignals);
       const telecomCoreScore = countHits(telecomCoreSignals);
       const serviceContextScore = countHits(serviceContextSignals);
-      const institutionalNoiseScore = countHits(institutionalNoiseSignals);
-      const tiAnchorScore = countHits(tiAnchorSignals);
-      const tiEvidenceScore = explicitTiScore + hardwareAssetScore + softwareCoreScore + servicesTiCoreScore + telecomCoreScore + enterpriseSignalScore;
-
-      if (tiAnchorScore === 0) return { general: "", sub: "" };
-      if (tiEvidenceScore === 0) return { general: "", sub: "" };
-      if (institutionalNoiseScore >= 2 && tiEvidenceScore < 2) return { general: "", sub: "" };
-      if (hardNonTiScore >= 3 && tiEvidenceScore < 3) return { general: "", sub: "" };
-      if (healthScore >= 2 && tiEvidenceScore < 3) return { general: "", sub: "" };
 
       const strongTiSignals = /\b(computador|notebook|laptop|tablet|celular|smartphone|servidor|nas|san|storage|rack|datacenter|switch|router|firewall|software|licencia|sistema operativo|administracion de redes|soporte tecnico|mesa de ayuda|help desk|telecomunicaciones|videoconferencia)\b/;
 
@@ -1987,8 +1976,8 @@
         {
           general: "Software",
           subs: [
-            { sub: "Gestion y Datos", rx: /\b(software de gestion|erp|crm|mesa de ayuda|help desk|base de datos|sql|bi|analitica|gestion documental digital|sistema de inventario)\b/g, w: 7 },
-            { sub: "Desarrollo e Integracion", rx: /\b(desarrollo de software|fabrica de software|integracion de sistemas|api|middleware|microservicios|devops|ci\/cd|mantenimiento de software)\b/g, w: 7 },
+            { sub: "Gestion y Datos", rx: /\b(software de gestion|software de consultas|gestion de datos|erp|crm|mesa de ayuda|help desk|base de datos|sql|bi|analitica)\b/g, w: 7 },
+            { sub: "Desarrollo e Integracion", rx: /\b(programas de desarrollo|desarrollo|programacion|codificacion|integracion|api|middleware|microservicios|devops|ci\/cd)\b/g, w: 7 },
             { sub: "Redes y Seguridad", rx: /\b(software de aplicaciones de red|software de administracion de redes|software para trabajo en redes|software de seguridad|ciberseguridad|antivirus|identidad)\b/g, w: 7 },
             { sub: "Entorno Operativo", rx: /\b(software de entorno operativo|sistema operativo|windows|linux|virtualizacion|vmware|hyper-v|contenedor|docker|kubernetes)\b/g, w: 6 }
           ]
@@ -1996,8 +1985,8 @@
         {
           general: "Servicios TI",
           subs: [
-            { sub: "Soporte y Mantencion", rx: /\b(soporte tecnico informatico|soporte informatico|mantenimiento y soporte de software|mantencion informatica|mesa de ayuda|help desk|servicio tecnico informatico|servicio tecnico ti)\b/g, w: 8 },
-            { sub: "Infraestructura y Sistemas", rx: /\b(ingenieria en computacion|administracion de sistemas|servicios de datos|hosting|cloud|nube|datacenter gestionado|infraestructura ti)\b/g, w: 7 },
+            { sub: "Soporte y Mantencion", rx: /\b(soporte tecnico|soporte informatico|mantenimiento y soporte de software|mantencion informatica|mesa de ayuda|help desk|servicio tecnico)\b/g, w: 8 },
+            { sub: "Infraestructura y Sistemas", rx: /\b(ingenieria en computacion|sistemas de informacion|administracion de sistemas|servicios de datos|servicios para internet|hosting|cloud|nube)\b/g, w: 7 },
             { sub: "Talento y Consultoria TI", rx: /\b(contratistas en tecnologias de la informacion|consultoria ti|servicios informaticos|personal ti|staff augmentation)\b/g, w: 7 },
             { sub: "Tecnologia Educativa", rx: /\b(tecnologia educativa|software educativo|materiales electronicos de aprendizaje)\b/g, w: 5 }
           ]
@@ -2006,7 +1995,7 @@
           general: "Telecom y Audiovisual",
           subs: [
             { sub: "Telecomunicaciones", rx: /\b(servicios de telecomunicaciones por redes|telecomunicaciones|voz ip|telefonia ip|enlace de datos|redes moviles y digitales)\b/g, w: 7 },
-            { sub: "Video y Conferencia", rx: /\b(videoconferencia|teleconferencia|cctv|videovigilancia|televigilancia|camaras de seguridad|sistema de camaras|nvr|dvr|switch de video|equipamiento audiovisual institucional|proyector(es)?|microfono(s)?)\b/g, w: 6 }
+            { sub: "Video y Conferencia", rx: /\b(videoconferencia|teleconferencia|proyector|camaras|camara|equipo de vigilancia|sistemas de sonido|mezcla de video y sonido|audiovisual)\b/g, w: 6 }
           ]
         }
       ];
@@ -2044,7 +2033,6 @@
         if (candidate.general === "Hardware") {
           if (hardwareAssetScore < 1) return false;
           if (enterpriseSignalScore < 1) return false;
-          if (hardwareAssetScore < 2 && explicitTiScore < 1 && platformSystemScore < 1) return false;
           if (nonTiScore >= 2 && enterpriseSignalScore < 2) return false;
           if (hardNonTiScore >= 1 && enterpriseSignalScore < 2) return false;
           if (healthScore >= 1 && enterpriseSignalScore < 2) return false;
@@ -2054,21 +2042,17 @@
 
         if (candidate.general === "Software") {
           if (softwareCoreScore < 1) return false;
-          if (softwareCoreScore < 2 && explicitTiScore < 1 && platformSystemScore < 1) return false;
-          if (hardNonTiScore >= 1 && softwareCoreScore < 2) return false;
+          if (hardNonTiScore >= 2 && softwareCoreScore < 2) return false;
         }
 
         if (candidate.general === "Servicios TI") {
           if (servicesTiCoreScore < 1) return false;
-          if (servicesTiCoreScore < 2 && explicitTiScore < 1 && platformSystemScore < 1) return false;
-          if (hardNonTiScore >= 1 && servicesTiCoreScore < 2) return false;
-          if (hardwareAssetScore >= 1 && softwareCoreScore === 0 && telecomCoreScore === 0) return false;
+          if (hardNonTiScore >= 2 && servicesTiCoreScore < 2) return false;
         }
 
         if (candidate.general === "Telecom y Audiovisual") {
           if (telecomCoreScore < 1) return false;
-          if (telecomCoreScore < 2 && explicitTiScore < 1 && platformSystemScore < 1) return false;
-          if (hardNonTiScore >= 2 && explicitTiScore < 1 && telecomCoreScore < 2) return false;
+          if (hardNonTiScore >= 3 && telecomCoreScore < 2) return false;
         }
 
         // Regla global de salud: si no hay señal TI robusta, no clasificar en TI.
