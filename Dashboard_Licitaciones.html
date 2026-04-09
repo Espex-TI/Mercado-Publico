@@ -1202,7 +1202,7 @@
                 <div class="logo d-flex align-items-center gap-2">
                   <span class="logo-mark"></span>
                   <div>
-                    <b>ESPEX</b>
+                    <b></b>
                     <span>Panel de licitaciones</span>
                   </div>
                 </div>
@@ -2850,9 +2850,21 @@
     }
 
     async function saveLocal() {
+      if (saveLocal._saving) {
+        toast("Guardado en curso...");
+        return;
+      }
       if (!st.selected) return;
       const r = st.rows.find(x => x.CodigoExterno === st.selected);
       if (!r) return;
+
+      saveLocal._saving = true;
+      const saveBtn = el.save;
+      const saveBtnLabel = saveBtn ? saveBtn.innerHTML : "";
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Guardando...';
+      }
       
       const nuevoVisto = el.edVisto.value;
       const nuevoEstado = normalizeGestionState(el.edEstado.value);
@@ -2877,36 +2889,14 @@
           modificado_en: new Date().toLocaleString('es-CL')
         };
 
-        let sincronizado = false;
-
-        // Primer intento: CORS + credenciales para poder confirmar respuesta real.
-        try {
-          const response = await fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-          });
-
-          if (response.ok) {
-            const json = await response.json().catch(() => null);
-            sincronizado = Boolean(json && json.success);
-          }
-        } catch (_) {
-          // Ignora y usa fallback no-cors.
-        }
-
-        // Fallback: no-cors + credenciales (no permite validar respuesta, pero puede llegar al servidor).
-        if (!sincronizado) {
-          await fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            credentials: "include",
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-          });
-        }
+        // Un solo envio para evitar duplicados en doPost.
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          credentials: "include",
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
 
         st.gestionMap[st.selected] = {
           id: st.selected,
@@ -2917,11 +2907,7 @@
           actualizadoEn: payload.modificado_en
         };
         saveGestionCache(st.gestionMap);
-        if (sincronizado) {
-          toast("Cambios guardados y confirmados en Web App.");
-        } else {
-          toast("Cambios locales guardados. Envio al Web App sin confirmacion (revisa autorizacion/logs).");
-        }
+        toast("Cambios guardados y enviados al Web App.");
       } catch (err) {
         console.error("Error sincronizando:", err);
         st.gestionMap[st.selected] = {
@@ -2934,6 +2920,12 @@
         };
         saveGestionCache(st.gestionMap);
         toast("Cambios guardados localmente. La hoja publicada es solo lectura.");
+      } finally {
+        saveLocal._saving = false;
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = saveBtnLabel;
+        }
       }
 
       apply();
