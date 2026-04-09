@@ -1218,7 +1218,7 @@
                     <button class="btn btn-outline-secondary" id="reset" title="Limpiar filtros" type="button"><i class="bi bi-x-lg me-1"></i>Limpiar filtros</button>
                   </div>
                   <div id="searchTokens" class="search-tags" aria-live="polite"></div>
-                  <span class="search-help">Escribe un término y presiona Enter o Agregar. Los términos se combinan simultáneamente.</span>
+                  <span class="search-help">Escribe un término y presiona Enter o Agregar. Los términos se suman (OR): basta que coincida uno.</span>
                 </div>
                 <div class="field mb-2">
                   <label for="cat">Categoría</label>
@@ -2424,7 +2424,7 @@
 
       st.filtered = st.rows.filter(r => {
         const text = buildSearchCorpus(r);
-        const mQ = !searchTerms.length || searchTerms.every(term => text.includes(term));
+        const mQ = !searchTerms.length || searchTerms.some(term => text.includes(term));
         const mCat = !cat || r.TipoLicitacion === cat;
         const mOrg = !org || r.Organismo === org;
         const mProd = !prod || (r.Producto === prod);
