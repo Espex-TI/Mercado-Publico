@@ -2431,7 +2431,7 @@
         const mCatGen = !catGen || (r.CategoriaGeneral === catGen);
         const mClaseTI = !claseTI || (r.ClaseTI === claseTI);
         const estadoLicitacion = getEstadoLicitacion(r);
-        const mEst = !est || estadoLicitacion === est;
+        const mEst = est ? estadoLicitacion === est : estadoLicitacion !== "Cerrada";
         const estadoGestion = String(r.EstadoTrabajo || "Sin Evaluar").trim() || "Sin Evaluar";
         const mGestion = !gestion || estadoGestion === gestion;
         let mV = true;
