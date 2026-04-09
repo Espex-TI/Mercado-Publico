@@ -1946,6 +1946,7 @@
       const telecomCoreSignals = /\b(telecomunicaciones|telefonia ip|voz ip|internet dedicado|enlace de datos|fibra optica|wifi|radioenlace|satelital|videovigilancia|televigilancia|camaras de seguridad|cctv|videoconferencia|servicio de comunicacion ip|red wan|red lan|sd-wan)\b/g;
       const serviceContextSignals = /\b(servicio|servicios|arriendo|mantencion|mantenimiento|soporte|contratacion|convenio|suministro|hosting)\b/g;
       const institutionalNoiseSignals = /\b(sistema de informacion y gestion de compras|mercado publico|bases administrativas|bases tecnicas|resolucion exenta|ley n|articulo|reglamento)\b/g;
+      const tiAnchorSignals = /\b(computador|computadores|notebook|laptop|servidor|servidores|storage|switch|router|firewall|ups|software|licencia|licenciamiento|saas|erp|crm|internet dedicado|enlace de datos|fibra optica|telefonia ip|voz ip|cloud|nube|hosting|ciberseguridad|datacenter|cctv|videovigilancia|televigilancia|plataforma web|plataforma digital|sistema informatico|sistema de gestion|sistema de asistencia|sistema de inventario|sistema de turnos|sistema de trazabilidad|gestion de personas|transformacion digital|gobernanza de datos|active directory|windows server|linux|virtualizacion|vmware|hyper-v|moodle|filemaker|autocad|adobe|sap)\b/g;
 
       // Evita clasificar como TI equipos de salud/biomedica por palabras genericas como
       // "monitor" o "equipo" cuando no hay suficiente señal TI real.
@@ -1960,8 +1961,10 @@
       const telecomCoreScore = countHits(telecomCoreSignals);
       const serviceContextScore = countHits(serviceContextSignals);
       const institutionalNoiseScore = countHits(institutionalNoiseSignals);
+      const tiAnchorScore = countHits(tiAnchorSignals);
       const tiEvidenceScore = explicitTiScore + hardwareAssetScore + softwareCoreScore + servicesTiCoreScore + telecomCoreScore + enterpriseSignalScore;
 
+      if (tiAnchorScore === 0) return { general: "", sub: "" };
       if (tiEvidenceScore === 0) return { general: "", sub: "" };
       if (institutionalNoiseScore >= 2 && tiEvidenceScore < 2) return { general: "", sub: "" };
       if (hardNonTiScore >= 3 && tiEvidenceScore < 3) return { general: "", sub: "" };
@@ -2041,7 +2044,7 @@
         if (candidate.general === "Hardware") {
           if (hardwareAssetScore < 1) return false;
           if (enterpriseSignalScore < 1) return false;
-          if (explicitTiScore < 1 && enterpriseSignalScore < 2) return false;
+          if (hardwareAssetScore < 2 && explicitTiScore < 1 && platformSystemScore < 1) return false;
           if (nonTiScore >= 2 && enterpriseSignalScore < 2) return false;
           if (hardNonTiScore >= 1 && enterpriseSignalScore < 2) return false;
           if (healthScore >= 1 && enterpriseSignalScore < 2) return false;
@@ -2051,19 +2054,20 @@
 
         if (candidate.general === "Software") {
           if (softwareCoreScore < 1) return false;
+          if (softwareCoreScore < 2 && explicitTiScore < 1 && platformSystemScore < 1) return false;
           if (hardNonTiScore >= 1 && softwareCoreScore < 2) return false;
-          if (explicitTiScore < 1 && softwareCoreScore < 2) return false;
         }
 
         if (candidate.general === "Servicios TI") {
           if (servicesTiCoreScore < 1) return false;
-          if (explicitTiScore < 1) return false;
+          if (servicesTiCoreScore < 2 && explicitTiScore < 1 && platformSystemScore < 1) return false;
           if (hardNonTiScore >= 1 && servicesTiCoreScore < 2) return false;
           if (hardwareAssetScore >= 1 && softwareCoreScore === 0 && telecomCoreScore === 0) return false;
         }
 
         if (candidate.general === "Telecom y Audiovisual") {
           if (telecomCoreScore < 1) return false;
+          if (telecomCoreScore < 2 && explicitTiScore < 1 && platformSystemScore < 1) return false;
           if (hardNonTiScore >= 2 && explicitTiScore < 1 && telecomCoreScore < 2) return false;
         }
 
