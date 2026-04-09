@@ -1498,7 +1498,7 @@
     const GESTION_PUBLIC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTFm45Y6dS_yQGBtyYW0Zql9mxTaasWeTk0T_IxU9Esr0i-yGhGmHygxDb3psjrVJTVnEimAAAhQoMd/pub?gid=1084871879&single=true&output=csv";
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6th-WROi9ihiKtOKHCMOVrtWnRPumEqgAq8tB0ExwgePeFq2flr8FnUOZ3N-fgTgI/exec";
 
-    const st = { rows: [], filtered: [], view: "cards", selected: null, currentPage: 1, pageSize: '10', gestionMap: {}, searchTerms: [] };
+    const st = { rows: [], filtered: [], view: "cards", selected: null, currentPage: 1, pageSize: '10', gestionMap: {}, searchTerms: [], quickMode: "" };
     const GESTION_CACHE_KEY = "cm-gestion-cache";
 
     const el = {
@@ -2477,6 +2477,7 @@
       const fechaDesde = (el.fechaDesde && el.fechaDesde.value) ? el.fechaDesde.value : "";
       const fechaHasta = (el.fechaHasta && el.fechaHasta.value) ? el.fechaHasta.value : "";
       const ordenarPor = (el.ordenarPor && el.ordenarPor.value) ? el.ordenarPor.value : "";
+      const quickMode = st.quickMode || "";
 
       st.filtered = st.rows.filter(r => {
         const text = buildSearchCorpus(r);
@@ -2501,7 +2502,14 @@
         const start = fechaDesde || "0000-01-01";
         const end = fechaHasta || "9999-12-31";
         const mFecha = !hasDateRange ? true : (fp && fp !== "-" && fp >= start && fp <= end);
-        return mQ && mCat && mOrg && mProd && mCatGen && mClaseTI && mEst && mGestion && mV && mFecha;
+        let mQuick = true;
+        if (quickMode === "urg") {
+          const d = Number(r.DiasRestantes);
+          mQuick = Number.isFinite(d) && d > 0 && d <= 3;
+        } else if (quickMode === "free") {
+          mQuick = String(r.EstadoTrabajo || "Sin Evaluar").trim() === "Sin Evaluar";
+        }
+        return mQ && mCat && mOrg && mProd && mCatGen && mClaseTI && mEst && mGestion && mV && mFecha && mQuick;
       });
 
       // Ordenar
@@ -3030,6 +3038,7 @@
 
     function resetFilters() {
       if (el.q) el.q.value = "";
+      st.quickMode = "";
       el.cat.value = "";
       el.org.value = "";
       el.estado.value = "";
@@ -3051,29 +3060,24 @@
 
     function quick(type) {
       if (type === "urg") {
+        st.quickMode = "urg";
         el.visto.value = "";
-        st.filtered = st.rows
-          .filter(r => {
-            const d = Number(r.DiasRestantes);
-            return Number.isFinite(d) && d > 0 && d <= 3;
-          })
-          .sort((a, b) => (Number(a.DiasRestantes) || 9999) - (Number(b.DiasRestantes) || 9999));
-        st.currentPage = 1;
-        updatePagination();
-        render();
-        kpis();
+        apply();
         return;
       }
-      if (type === "new") el.visto.value = "NUEVO";
+      if (type === "new") {
+        st.quickMode = "";
+        el.visto.value = "NUEVO";
+        apply();
+        return;
+      }
       if (type === "free") {
+        st.quickMode = "free";
         el.visto.value = "";
-        st.filtered = st.rows.filter(r => (r.EstadoTrabajo || "Sin Evaluar") === "Sin Evaluar");
-        st.currentPage = 1;
-        updatePagination();
-        render();
-        kpis();
+        apply();
         return;
       }
+      st.quickMode = "";
       apply();
     }
 
