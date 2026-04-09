@@ -1811,10 +1811,8 @@
       migrateLegacyDefaultStatus(st.rows);
       st.filtered = Array.isArray(rows) ? [...rows] : [];
       fillFilters();
-      st.currentPage = 1;
-      updatePagination();
-      render();
-      kpis();
+      // Apply default filters on initial load (e.g., hide "Cerrada" when Estado is empty).
+      apply();
     }
 
     function classifyProduct(input) {
