@@ -1202,7 +1202,7 @@
                 <div class="logo d-flex align-items-center gap-2">
                   <span class="logo-mark"></span>
                   <div>
-                    <b>ESPEX</b>
+                    <b></b>
                     <span>Panel de licitaciones</span>
                   </div>
                 </div>
@@ -2314,11 +2314,8 @@
       const estado = normalizeSearchText(row && row.EstadoAPI);
       if (/cerrad/.test(estado)) return true;
 
-      const n = Number(row && row.DiasRestantes);
-      if (Number.isFinite(n) && n <= 0) return true;
-
       const cierre = dateOnly(row && row.FechaCierre);
-      if (cierre && cierre !== "-" && cierre <= todayOnly()) return true;
+      if (cierre && cierre !== "-" && cierre < todayOnly()) return true;
 
       return false;
     }
