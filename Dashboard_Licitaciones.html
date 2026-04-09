@@ -1938,9 +1938,14 @@
 
       const countHits = rx => (s.match(rx) || []).length;
 
+      const enterpriseHardwareSignals = /\b(computador|computadores|pc|notebook|laptop|workstation|servidor|servidores|blade|datacenter|rack|gabinete de red|switch|router|firewall|access point|punto de acceso|wifi|fibra optica|storage|almacenamiento|nas|san|backup|respaldo|ups|pdu|vmware|hyper-v)\b/g;
+      const broadNonTiSignals = /\b(hospital|clinica|salud|medic|biomed|paciente|farmacia|laboratorio|reactivo|anestesia|quirurg|dental|odont|resonancia|ecogra|radiolog|veterinari|asfalto|alcantarillado|vereda|paviment|obra civil|construccion|camarin|cancha|plaza|cocteleria|banqueteria|evento|produccion de eventos|aridos|camion|vehiculo|aseo|limpieza|vigilancia|seguridad fisica|uniforme|vestuario|gasfiteria|podas?)\b/g;
+
       // Evita clasificar como TI equipos de salud/biomedica por palabras genericas como
       // "monitor" o "equipo" cuando no hay suficiente señal TI real.
       const healthScore = countHits(/\b(hospital|clinica|salud|medic|biomed|paciente|farmacia|laboratorio|reactivo|anestesia|quirurg|dental|odont|resonancia|ecogra|radiolog|desfibrilador|monitor multiparametro|insumo medico)\b/g);
+      const nonTiScore = countHits(broadNonTiSignals);
+      const enterpriseSignalScore = countHits(enterpriseHardwareSignals);
 
       const strongTiSignals = /\b(computador|notebook|laptop|tablet|celular|smartphone|servidor|nas|san|storage|rack|datacenter|switch|router|firewall|software|licencia|sistema operativo|administracion de redes|soporte tecnico|mesa de ayuda|help desk|telecomunicaciones|videoconferencia)\b/;
 
@@ -1952,8 +1957,8 @@
             { sub: "Servidores y Datacenter", rx: /\b(servidor|servidores|blade|datacenter|rack|gabinete|chasis|ups|pdu|kvm)\b/g, w: 8 },
             { sub: "Almacenamiento y Backup", rx: /\b(storage|almacenamiento|nas|san|ssd|hdd|disco duro|unidad de almacenamiento|cinta lto|backup|respaldo|soporte de almacenamiento)\b/g, w: 8 },
             { sub: "Redes y Seguridad", rx: /\b(switch|router|firewall|vpn|wifi|access point|punto de acceso|lan|wan|fibra optica|red optica|poe|balanceador|equipo fijo de red|seguridad de red)\b/g, w: 8 },
-            { sub: "Perifericos e Impresion", rx: /\b(monitor|pantalla|impresora|scanner|escaner|teclado|mouse|webcam|camara web|microfono|dock|hub usb|accesorios de computador|dispositivo de entrada de datos)\b/g, w: 5 },
-            { sub: "Componentes Electronicos TI", rx: /\b(circuito integrado|memoria|microprocesador|procesador|modulo|interfaz|placa de sistema|placa madre|motherboard|tarjeta de red|subconjunto electronico)\b/g, w: 7 }
+            { sub: "Perifericos e Impresion", rx: /\b(impresora|impresoras|scanner|escaner|teclado|mouse|webcam|camara web|dock|hub usb|accesorios de computador|dispositivo de entrada de datos|monitor de computador|monitor lcd|monitor led|monitor ips|pantalla para computador)\b/g, w: 5 },
+            { sub: "Componentes Electronicos TI", rx: /\b(circuito integrado|memoria ram|microprocesador|cpu|gpu|placa madre|motherboard|tarjeta de red|fuente de poder|ssd nvme|unidad ssd)\b/g, w: 7 }
           ]
         },
         {
@@ -2009,6 +2014,12 @@
 
       // Umbral minimo para evitar ruido por palabras muy generales.
       if (winner.score < 4) return { general: "", sub: "" };
+
+      // Hardware en modo estricto: exige señales claras de infraestructura TI empresarial.
+      if (winner.general === "Hardware") {
+        if (enterpriseSignalScore < 1) return { general: "", sub: "" };
+        if (nonTiScore >= 2 && enterpriseSignalScore < 2) return { general: "", sub: "" };
+      }
 
       // Si predomina contexto salud y no hay señal TI fuerte, no clasificar en TI.
       if (healthScore >= 2 && !strongTiSignals.test(s)) return { general: "", sub: "" };
