@@ -1202,7 +1202,7 @@
                 <div class="logo d-flex align-items-center gap-2">
                   <span class="logo-mark"></span>
                   <div>
-                    <b></b>
+                    <b>ESPEX</b>
                     <span>Panel de licitaciones</span>
                   </div>
                 </div>
@@ -1934,30 +1934,51 @@
         source.Organismo
       ].filter(Boolean).join(" "));
 
+      if (!s) return { general: "", sub: "" };
+
+      const countHits = rx => (s.match(rx) || []).length;
+
+      // Evita clasificar como TI equipos de salud/biomedica por palabras genericas como
+      // "monitor" o "equipo" cuando no hay suficiente señal TI real.
+      const healthScore = countHits(/\b(hospital|clinica|salud|medic|biomed|paciente|farmacia|laboratorio|reactivo|anestesia|quirurg|dental|odont|resonancia|ecogra|radiolog|desfibrilador|monitor multiparametro|insumo medico)\b/g);
+
+      const strongTiSignals = /\b(computador|notebook|laptop|tablet|celular|smartphone|servidor|nas|san|storage|rack|datacenter|switch|router|firewall|software|licencia|sistema operativo|administracion de redes|soporte tecnico|mesa de ayuda|help desk|telecomunicaciones|videoconferencia)\b/;
+
       const groups = [
         {
           general: "Hardware",
           subs: [
-            { sub: "Infraestructura", rx: /\b(servidor|storage|rack|ups|switch|router|firewall|datacenter|cableado|redes?|wifi|antena)\b/, w: 6 },
-            { sub: "Equipo de Usuario", rx: /\b(computador|notebook|laptop|tablet|impresora|monitor|scanner|escaner|perifericos?)\b/, w: 5 },
-            { sub: "Componentes", rx: /\b(hardware|componente|tarjeta|disco|memoria|procesador|fuente|cable|patch cord)\b/, w: 4 }
+            { sub: "Computo y Movilidad", rx: /\b(computador|computadores|notebook|laptop|tablet|celular|smartphone|telefono ip|workstation|thin client|all in one)\b/g, w: 7 },
+            { sub: "Servidores y Datacenter", rx: /\b(servidor|servidores|blade|datacenter|rack|gabinete|chasis|ups|pdu|kvm)\b/g, w: 8 },
+            { sub: "Almacenamiento y Backup", rx: /\b(storage|almacenamiento|nas|san|ssd|hdd|disco duro|unidad de almacenamiento|cinta lto|backup|respaldo|soporte de almacenamiento)\b/g, w: 8 },
+            { sub: "Redes y Seguridad", rx: /\b(switch|router|firewall|vpn|wifi|access point|punto de acceso|lan|wan|fibra optica|red optica|poe|balanceador|equipo fijo de red|seguridad de red)\b/g, w: 8 },
+            { sub: "Perifericos e Impresion", rx: /\b(monitor|pantalla|impresora|scanner|escaner|teclado|mouse|webcam|camara web|microfono|dock|hub usb|accesorios de computador|dispositivo de entrada de datos)\b/g, w: 5 },
+            { sub: "Componentes Electronicos TI", rx: /\b(circuito integrado|memoria|microprocesador|procesador|modulo|interfaz|placa de sistema|placa madre|motherboard|tarjeta de red|subconjunto electronico)\b/g, w: 7 }
           ]
         },
         {
           general: "Software",
           subs: [
-            { sub: "Licencias", rx: /\b(software|licencia|licenciamiento|saas|erp|crm|moodle|plataforma|sistema|aplicacion|app|portal|web|base de datos|bd)\b/, w: 6 },
-            { sub: "Desarrollo", rx: /\b(desarrollo|programacion|codificacion|integracion|implementacion de software)\b/, w: 5 },
-            { sub: "Nube", rx: /\b(cloud|nube|hosting|backup|storage|respaldo)\b/, w: 4 }
+            { sub: "Gestion y Datos", rx: /\b(software de gestion|software de consultas|gestion de datos|erp|crm|mesa de ayuda|help desk|base de datos|sql|bi|analitica)\b/g, w: 7 },
+            { sub: "Desarrollo e Integracion", rx: /\b(programas de desarrollo|desarrollo|programacion|codificacion|integracion|api|middleware|microservicios|devops|ci\/cd)\b/g, w: 7 },
+            { sub: "Redes y Seguridad", rx: /\b(software de aplicaciones de red|software de administracion de redes|software para trabajo en redes|software de seguridad|ciberseguridad|antivirus|identidad)\b/g, w: 7 },
+            { sub: "Entorno Operativo", rx: /\b(software de entorno operativo|sistema operativo|windows|linux|virtualizacion|vmware|hyper-v|contenedor|docker|kubernetes)\b/g, w: 6 }
           ]
         },
         {
           general: "Servicios TI",
           subs: [
-            { sub: "Mesa de ayuda", rx: /\b(mesa de ayuda|help desk|soporte|soporte tecnico|atencion a usuarios)\b/, w: 6 },
-            { sub: "Mantención TI", rx: /\b(mantencion informatica|mantenimiento informatico|soporte informatico|reparacion informatica)\b/, w: 6 },
-            { sub: "Implementación", rx: /\b(implementacion|integracion|migracion|consultoria ti|servicios informaticos)\b/, w: 5 },
-            { sub: "Capacitación", rx: /\b(capacitacion|formacion|entrenamiento|adopcion digital)\b/, w: 4 }
+            { sub: "Soporte y Mantencion", rx: /\b(soporte tecnico|soporte informatico|mantenimiento y soporte de software|mantencion informatica|mesa de ayuda|help desk|servicio tecnico)\b/g, w: 8 },
+            { sub: "Infraestructura y Sistemas", rx: /\b(ingenieria en computacion|sistemas de informacion|administracion de sistemas|servicios de datos|servicios para internet|hosting|cloud|nube)\b/g, w: 7 },
+            { sub: "Talento y Consultoria TI", rx: /\b(contratistas en tecnologias de la informacion|consultoria ti|servicios informaticos|personal ti|staff augmentation)\b/g, w: 7 },
+            { sub: "Tecnologia Educativa", rx: /\b(tecnologia educativa|software educativo|materiales electronicos de aprendizaje)\b/g, w: 5 }
+          ]
+        },
+        {
+          general: "Telecom y Audiovisual",
+          subs: [
+            { sub: "Telecomunicaciones", rx: /\b(servicios de telecomunicaciones por redes|telecomunicaciones|voz ip|telefonia ip|enlace de datos|redes moviles y digitales)\b/g, w: 7 },
+            { sub: "Video y Conferencia", rx: /\b(videoconferencia|teleconferencia|proyector|camaras|camara|equipo de vigilancia|sistemas de sonido|mezcla de video y sonido|audiovisual)\b/g, w: 6 }
           ]
         }
       ];
@@ -1969,7 +1990,7 @@
         let bestSubScore = -1;
 
         for (const sub of group.subs) {
-          const hits = (s.match(new RegExp(sub.rx.source, "g")) || []).length;
+          const hits = countHits(sub.rx);
           if (!hits) continue;
           const subScore = hits * sub.w;
           score += subScore;
@@ -1985,6 +2006,14 @@
       }
 
       if (!winner) return { general: "", sub: "" };
+
+      // Umbral minimo para evitar ruido por palabras muy generales.
+      if (winner.score < 4) return { general: "", sub: "" };
+
+      // Si predomina contexto salud y no hay señal TI fuerte, no clasificar en TI.
+      if (healthScore >= 2 && !strongTiSignals.test(s)) return { general: "", sub: "" };
+      if (healthScore >= 3 && winner.general === "Hardware" && winner.score < 12) return { general: "", sub: "" };
+
       return { general: winner.general, sub: winner.sub };
     }
 
